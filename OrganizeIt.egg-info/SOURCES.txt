@@ -1,0 +1,8 @@
+README.md
+setup.py
+OrganizeIt.egg-info/PKG-INFO
+OrganizeIt.egg-info/SOURCES.txt
+OrganizeIt.egg-info/dependency_links.txt
+OrganizeIt.egg-info/entry_points.txt
+OrganizeIt.egg-info/top_level.txt
+organizeIt/__main__.py
