@@ -1,3 +1,0 @@
-[console_scripts]
-oIt = organizeIt.__main__:main
-
