@@ -4,7 +4,7 @@ from datetime import datetime
 
 from organizeIt.settings import SCHEMA
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 class YAMLConfigValidator:
     """
@@ -38,14 +38,14 @@ class YAMLConfigValidator:
         Raises:
             ValidationError: If the YAML data does not conform to the validation rules.
         """
-        logger.info(' - Starting Config Validation.')
+        LOGGER.info(' - Starting Config Validation.')
         try:
             # Create the validator instance
             self.__obj_validator = jsonschema.Draft202012Validator(self.__obj_schema, format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER)
             self.__print_errors()
             return True
         except jsonschema.exceptions.ValidationError as obj_exceptions:
-            logger.exception(obj_exceptions)
+            LOGGER.exception(obj_exceptions)
 
     def __print_errors(self):
         obj_errors = self.__obj_validator.iter_errors(self.__yaml_data)
@@ -54,8 +54,8 @@ class YAMLConfigValidator:
             lst_errors.append(error)
 
         if len(lst_errors) == 0:
-            logger.info(' - Config is Successfully Validated.')
+            LOGGER.info(' - Config is Successfully Validated.')
         else:
             for item_error in lst_errors:
-                logger.error(' - Blueprint validation error: ' + item_error.message + ' / Reason: ' + str(item_error.schema) + ' / Where: ' + str(list(item_error.absolute_path)))
+                LOGGER.error(' - Blueprint validation error: ' + item_error.message + ' / Reason: ' + str(item_error.schema) + ' / Where: ' + str(list(item_error.absolute_path)))
 
