@@ -43,28 +43,30 @@ class FileManager:
             # Skip directories above the current directory level
             if dirpath == root_dir:
                 # Add files directly in the root directory
-                file_dict[FILES] = filenames
+                file_dict[FILES] = sorted(filenames) # keep them sorted
                 
             else:
                 # For subdirectories, add their content recursively
-                subdir_name = os.path.basename(dirpath)
-                if subdir_name not in file_dict['dir']:
-                    file_dict['dir'][subdir_name] = {
-                        'files': filenames,
-                        'dir': self.file_walk(dirpath)['dir']  # Recursive call for subdirectories
-                    }
+                # TODO: if there are not sub dir, we don't need to return empty object. Fix tests later 
+                if len(dirpath.split('/')) - 1 == len(root_dir.split('/')):
+                    subdir_name = os.path.basename(dirpath)
+                    if subdir_name not in file_dict[DIR]:
+                        file_dict[DIR][subdir_name] = {
+                            FILES: sorted(filenames),
+                            DIR: self.file_walk(dirpath)[DIR]  # Recursive call for subdirectories
+                        }
 
         return file_dict
     
-    def print_tree_structure(self, tree_dict, indent):
+    def generate_tree_structure(self, tree_dict, indent, generated_tree_file):
         indent += "│   "
         # if file list files
         for file in tree_dict[FILES]:
-            print(f"{indent}├── {file}")
+            generated_tree_file.write(f"\n{indent}├── {file}")
 
         for dir in tree_dict[DIR]:
-            print(f"{indent}├── {dir}/")
-            self.print_tree_structure(tree_dict[DIR][dir], indent + "    ")
+            generated_tree_file.write(f"\n{indent}├── {dir}/")
+            self.generate_tree_structure(tree_dict[DIR][dir], indent + "    ", generated_tree_file)
 
 
         

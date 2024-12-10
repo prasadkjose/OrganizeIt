@@ -25,6 +25,9 @@ CONFIG_DIR = os.path.join(ROOT_DIR, "configs")
 # The path to the test fixtures configs directory
 TEST_FIXTURES_DIR = os.path.join(ROOT_DIR, "tests/_fixtures")
 
+# .tmp file path for any temporary files
+TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
+
 def load_json_schema():
     with open(os.path.join(CONFIG_DIR, 'config-schema.json5'), 'r') as tmp_file:
         return json.load(tmp_file)

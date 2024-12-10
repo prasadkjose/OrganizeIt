@@ -1,7 +1,8 @@
 import logging
+import os
 
 from organizeIt.schemaValidation import Validator # Validator.py
-from organizeIt.settings import CONFIG, ROOT_DIR
+from organizeIt.settings import CONFIG, ROOT_DIR, TEST_FIXTURES_DIR, TMP_DIR
 import organizeIt.bin.FileManager as FileManager
 
 logger = logging.getLogger(__name__)
@@ -23,14 +24,16 @@ def main():
     schema_validator = Validator.YAMLConfigValidator(CONFIG)
     schema_validator.validate_config()
 
-    # TODO: Take Source and destination as CLI args.
 
     # Create and return a dict of files and directories
     file_manager = FileManager.FileManager()
-    tree_dict = file_manager.file_walk(ROOT_DIR._str)
-    # print(tree_dict)
+    # TODO: Take Source and destination as CLI args.
+    tree_dict = file_manager.file_walk(TEST_FIXTURES_DIR+'/generatedFiles')
 
-    file_manager.print_tree_structure(tree_dict, "")
+    # write to a temp buffer
+    os.makedirs(TMP_DIR, exist_ok=True)
+    with open(f'{TMP_DIR}/.generated.tree', 'w') as generated_tree_file:
+        file_manager.generate_tree_structure(tree_dict, "", generated_tree_file)
 
 
 if __name__ == '__main__':
