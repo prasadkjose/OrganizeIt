@@ -1,7 +1,8 @@
 import logging
 
 from organizeIt.schemaValidation import Validator # Validator.py
-from organizeIt.settings import CONFIG
+from organizeIt.settings import CONFIG, ROOT_DIR
+import organizeIt.bin.FileManager as FileManager
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,13 @@ def main():
     schema_validator.validate_config()
 
     # TODO: Take Source and destination as CLI args.
+
+    # Create and return a dict of files and directories
+    file_manager = FileManager.FileManager()
+    tree_dict = file_manager.file_walk(ROOT_DIR._str)
+    # print(tree_dict)
+
+    file_manager.print_tree_structure(tree_dict, "")
 
 
 if __name__ == '__main__':
