@@ -1,0 +1,15 @@
+source: ""
+destination: ""
+format:
+  photo: 
+    format: ['png', 'jpg']
+    directory_name: ""
+  video: 
+    format: ['mp4', 'wmv']
+    directory_name: ""
+  document: 
+    format: ['doc', 'docx', 'pdf', 'txt', 'ppt']
+    directory_name: ""
+  compressed: 
+    format: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
+    directory_name: ""
