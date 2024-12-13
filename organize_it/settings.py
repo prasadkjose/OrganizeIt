@@ -28,6 +28,8 @@ TEST_FIXTURES_DIR = os.path.join(ROOT_DIR, "tests/_fixtures")
 
 # .tmp file path for any temporary files
 TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
+GENERATED_DESTINATION_TREE_PATH = f"{TMP_DIR}/.generated_destination.tree"
+GENERATED_SOURCE_TREE = f"{TMP_DIR}/.generated.tree"
 
 
 def load_json_schema():

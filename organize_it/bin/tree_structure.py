@@ -1,9 +1,6 @@
 """ File Manager module which handles all product related file handling"""
 
-import logging
 from organize_it.settings import FILES, DIR
-
-LOGGER = logging.getLogger(__name__)
 
 
 class TreeStructure:
@@ -63,60 +60,3 @@ class TreeStructure:
                 self.generate_tree_structure(
                     tree_dict[DIR][directory], indent + "    ", generated_tree_file
                 )
-
-    def yaml_config_to_dict(self, config_dict: dict) -> dict:
-        """
-        Takes in the config dictionary and converts it to oIt tree input dictionary.
-
-        Args:
-            config_dict (str): The parsed config file.
-
-        Returns:
-            dict: A dictionary containing files and subdirectories in the format:
-                {
-                    'files': [list_of_files],
-                    'dir': {
-                        'subdir_name': {
-                            'files': [list_of_files_in_subdir],
-                            'dir': {
-                                ...
-                            }
-                        }
-                    }
-                }
-        """
-        LOGGER.info(
-            "Generating clean and organised tree structure based on the provided config."
-        )
-
-        def recursive(config_dict):
-            # Loop through the formats in the config and create subdirs in the tree.
-            if "format" in config_dict:
-                formated_directories = list(config_dict["format"].keys())
-                generated_dict = {}
-                for directory_name in formated_directories:
-                    generated_dict[directory_name] = recursive(
-                        config_dict["format"][directory_name]
-                    )
-
-                return {DIR: generated_dict}
-            else:
-                return {}
-
-        return recursive(config_dict)
-
-    def create_tree_from_config(self, config: dict) -> dict:
-        """
-        Creates a directory tree structure from the given YAML config.
-        Makes sure the config is validated before creating a tree.
-
-        Args:
-            dict: config dictonary to build tree from
-            bool: save_to_file If true, saves the generated tree to a file
-
-        Returns:
-            dict: directory tree structure
-
-        Raises:
-            ValidationError: If the YAML data does not conform to the validation rules.
-        """

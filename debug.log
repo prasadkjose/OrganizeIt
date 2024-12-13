@@ -1,0 +1,18 @@
+2024-12-13 18:31:58,135 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 18:31:58,136 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 18:40:12,218 [INFO]  - Starting to organize...
+2024-12-13 18:40:12,218 [INFO]  - Starting Config Validation.
+2024-12-13 18:40:12,218 [INFO]  - Config is Successfully Validated.
+2024-12-13 18:40:12,219 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 18:40:15,564 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 18:40:15,564 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 18:40:15,565 [INFO]  - Starting Config Validation.
+2024-12-13 18:40:15,565 [INFO]  - Config is Successfully Validated.
+2024-12-13 18:40:15,565 [INFO]  - Starting Config Validation.
+2024-12-13 18:40:15,565 [ERROR]  - Blueprint validation error: {'png': None, 'jpg': None} is not of type 'array' / Reason: {'type': 'array'} / Where: ['format', 'photo', 'types']
+2024-12-13 19:32:17,380 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 19:32:45,055 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 19:34:06,117 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 19:38:28,039 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 19:49:26,083 [INFO] Generating clean and organised tree structure based on the provided config.
+2024-12-13 19:50:25,253 [INFO] Generating clean and organised tree structure based on the provided config.

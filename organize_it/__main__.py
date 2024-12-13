@@ -4,9 +4,16 @@
 import logging
 import os
 
-from organize_it.settings import TEST_FIXTURES_DIR, TMP_DIR, CONFIG
+from organize_it.settings import (
+    TEST_FIXTURES_DIR,
+    TMP_DIR,
+    CONFIG,
+    GENERATED_DESTINATION_TREE_PATH,
+    GENERATED_SOURCE_TREE,
+)
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
+from organize_it.bin.categorizer import Categorizer
 from organize_it.schema_validation.validator import YAMLConfigValidator
 
 logger = logging.getLogger(__name__)
@@ -30,30 +37,33 @@ def main():
     schema_validator.validate_config()
 
     ## Current Structure
-    # Create and return a dict of files and directories
     file_manager = FileManager()
     # TODO: Take Source and destination as CLI args.
-    tree_dict = file_manager.file_walk(TEST_FIXTURES_DIR + "/generated_files")
 
-    # write to a temp buffer
+    # Read the source directory and create oIt tree input dictionary
+    source_tree_dict = file_manager.file_walk(TEST_FIXTURES_DIR + "/generated_files")
+
+    # write the source tree to a file
     tree_structure = TreeStructure()
     os.makedirs(TMP_DIR, exist_ok=True)
-    with open(f"{TMP_DIR}/.generated.tree", "w") as generated_tree_file:
-        tree_structure.generate_tree_structure(tree_dict, "", generated_tree_file)
+    with open(GENERATED_SOURCE_TREE, "w") as generated_tree_file:
+        tree_structure.generate_tree_structure(
+            source_tree_dict, "", generated_tree_file
+        )
 
     ## new Structure
-    # get the source and destination directories, if any
-    # create tree dict from config
-    config_tree_dic = tree_structure.yaml_config_to_dict(CONFIG)
-
-    with open(f"{TMP_DIR}/.generated_destination.tree", "w") as generated_tree_file:
-        tree_structure.generate_tree_structure(config_tree_dic, "", generated_tree_file)
-
-    # TODO: Read the source directory and create oIt tree input dictionary
     # TODO: recursive_sort:
     # If is_recursive, Read each level of the recursively directory
     # and generate oIt dict based on the config
     # else, create the tree of the top level.
+
+    categorizer = Categorizer()
+    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict)
+
+    with open(GENERATED_DESTINATION_TREE_PATH, "w") as generated_tree_file:
+        tree_structure.generate_tree_structure(
+            categorized_tree_dict, "", generated_tree_file
+        )
 
     # TODO: copy files based on the new sorted to destination.
     # Explore SYMLINKS(unix), Junction(Windows)

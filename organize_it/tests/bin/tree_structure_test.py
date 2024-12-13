@@ -34,23 +34,3 @@ class TestTreeStructure:
             )
             is True
         )
-
-    def test_yaml_config_to_dict(self):
-        """Test TreeStructure.yaml_config_to_dict method to create oIt input dictionary from a given config file"""
-
-        tree_structure = TreeStructure()
-        oit_tree_dict = tree_structure.yaml_config_to_dict(CONFIG[1])
-        assert oit_tree_dict[DIR] == {
-            "photo": {},
-            "video": {},
-            "document": {},
-            "compressed": {},
-        }
-
-        oit_tree_dict = tree_structure.yaml_config_to_dict(CONFIG[0])
-        assert oit_tree_dict[DIR] == {
-            "photo": {DIR: {"photoA": {}}},
-            "video": {},
-            "document": {DIR: {"documentA": {}}},
-            "compressed": {},
-        }
