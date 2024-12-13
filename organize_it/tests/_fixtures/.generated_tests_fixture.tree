@@ -1,0 +1,11 @@
+
+│   ├── generated_files/
+│       │   ├── file1.txt
+│       │   ├── file2.txt
+│       │   ├── subdir1/
+│       │       │   ├── subfileA.txt
+│       │       │   ├── subfileB.txt
+│       │       │   ├── subsubdir1/
+│       │       │       │   ├── subsubfile1.txt
+│       │   ├── subdir2/
+│       │       │   ├── subdir2file.txt

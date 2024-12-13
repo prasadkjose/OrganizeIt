@@ -1,0 +1,17 @@
+source: ""
+destination: ""
+format:
+  photo: 
+    types: ['png', 'jpg']
+    format: 
+      photoA: 
+        types: ['png1', 'jpg1']
+  video: 
+    types: ['mp4', 'wmv']
+  document: 
+    types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
+    format: 
+      documentA: 
+        types: ['doc1', 'pdf1']
+  compressed: 
+    types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
