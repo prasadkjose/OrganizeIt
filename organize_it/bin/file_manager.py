@@ -1,9 +1,7 @@
 """ File Manager module which handles all product related file handling"""
 
 import os
-
-FILES = "files"
-DIR = "dir"
+from organize_it.settings import FILES, DIR
 
 
 class FileManager:
@@ -18,7 +16,7 @@ class FileManager:
     def file_walk(self, root_dir: str) -> dict:
         """
         Recursively lists all files and directories starting from the given root directory,
-        and returns the result in a nested dictionary format.
+        and returns the result in a nested oIt dictionary format.
 
         Args:
             root_dir (str): The root directory from which to start the search.

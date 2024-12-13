@@ -2,14 +2,10 @@ source: ""
 destination: ""
 format:
   photo: 
-    format: {'png', 'jpg'}
-    directory_name: ""
+    types: {'png', 'jpg'}
   video: 
-    format: ['mp4', 'wmv']
-    directory_name: ""
+    types: ['mp4', 'wmv']
   document: 
-    format: ['doc', 'docx', 'pdf', 'txt', 'ppt']
-    directory_name: ""
+    types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
   compressed: 
-    format: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
-    directory_name: ""
+    types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']

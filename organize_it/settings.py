@@ -14,6 +14,9 @@ logging.basicConfig(
     handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
 )
 
+FILES = "files"
+DIR = "dir"
+
 # The project root path
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -29,7 +32,7 @@ TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
 
 def load_json_schema():
     """Load json-schema file to memory"""
-    with open(os.path.join(CONFIG_DIR, "config-schema.json5"), "r") as tmp_file:
+    with open(os.path.join(CONFIG_DIR, "config-schema.json"), "r") as tmp_file:
         return json.load(tmp_file)
 
 
