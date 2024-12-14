@@ -1,6 +1,8 @@
 """ File Manager module which handles all product related file handling"""
 
 import os
+from pathlib import Path
+import shutil
 from organize_it.settings import FILES, DIR
 
 
@@ -48,9 +50,10 @@ class FileManager:
         # Traverse the root directory using os.walk to get directories and files
         for dirpath, dirnames, filenames in os.walk(root_dir):
             # Skip directories above the current directory level
+            rel_dir = os.path.relpath(dirpath, root_dir)
             if dirpath == root_dir:
                 # Add files directly in the root directory
-                file_dict[FILES] = sorted(filenames)  # keep them sorted
+                file_dict[FILES] = sorted([os.path.join(rel_dir, f) for f in filenames])
 
             else:
                 # For subdirectories, add their content recursively
@@ -59,7 +62,9 @@ class FileManager:
                     subdir_name = os.path.basename(dirpath)
                     if subdir_name not in file_dict[DIR]:
                         file_dict[DIR][subdir_name] = {
-                            FILES: sorted(filenames),
+                            FILES: sorted(
+                                [os.path.join(rel_dir, f) for f in filenames]
+                            ),
                             DIR: self.file_walk(dirpath)[
                                 DIR
                             ],  # Recursive call for subdirectories
@@ -67,49 +72,19 @@ class FileManager:
 
         return file_dict
 
-    def generate_tree_structure(self, tree_dict, indent, generated_tree_file):
-        """
-        Recursively generates a textual tree structure representation of files and directories
-        and writes it to a specified file.
-
-        This method traverses a nested dictionary representing the structure of directories
-        and files. For each directory, it prints the directory name followed by a list of
-        files and subdirectories in a tree-like format, which is then written to the
-        `generated_tree_file`.
-
-        Args:
-            tree_dict (dict): A nested dictionary representing the directory structure.
-                            It should have two main keys: 'FILES' and 'DIR'. 'FILES' maps
-                            to a list of file names, and 'DIR' maps to another dictionary
-                            of subdirectories with their corresponding structure.
-            indent (str): A string representing the current indentation level. This is used
-                        to format the tree structure with appropriate spacing.
-            generated_tree_file (file-like object): A writable file object where the tree structure
-                                                    will be written. This could be a file opened
-                                                    in write or append mode.
-
-        Example:
-            tree_dict = {
-                'FILES': ['file1.txt', 'file2.txt'],
-                'DIR': {
-                    'subdir1': {
-                        'FILES': ['file3.txt'],
-                        'DIR': {}
-                    },
-                    'subdir2': {
-                        'FILES': [],
-                        'DIR': {}
-                    }
-                }
-            }
-        """
-        indent += "│   "
-        # if file list files
-        for file in tree_dict[FILES]:
-            generated_tree_file.write(f"\n{indent}├── {file}")
-
-        for directory in tree_dict[DIR]:
-            generated_tree_file.write(f"\n{indent}├── {directory}/")
-            self.generate_tree_structure(
-                tree_dict[DIR][directory], indent + "    ", generated_tree_file
-            )
+    def categorize_and_sort_file(
+        self, sorted_tree_dict, destination_directory, source_directory
+    ):
+        """Perform file operations based on the sorted_tree_dict"""
+        # TODO: Iterate through the sorted dict top-down and do the cp command.
+        current_dir = sorted_tree_dict[DIR]
+        current_level_directories = current_dir.keys()
+        for dir_name in current_level_directories:
+            dest_subdir_path = os.path.join(destination_directory, dir_name)
+            os.makedirs(dest_subdir_path, exist_ok=True)
+            for file_to_be_copied in current_dir[dir_name][FILES]:
+                cleaned_file_name = file_to_be_copied
+                if file_to_be_copied.startswith("./"):
+                    cleaned_file_name = file_to_be_copied.replace(("."), "", 1)
+                source_file_path = f"{source_directory}{cleaned_file_name}"
+                shutil.copy(source_file_path, dest_subdir_path)

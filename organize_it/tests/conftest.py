@@ -19,7 +19,7 @@ directory_structure = {
                 },
                 "subdir2": {FILES: ["subdir2file.txt"], DIR: {}},
             },
-            FILES: ["file1.txt", "file2.txt"],
+            FILES: ["file1.pdf", "file2.txt", "file3.jpg"],
         }
     },
     FILES: [],

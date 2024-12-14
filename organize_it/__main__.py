@@ -40,8 +40,9 @@ def main():
     file_manager = FileManager()
     # TODO: Take Source and destination as CLI args.
 
+    source_directory = TEST_FIXTURES_DIR + "/generated_files"
     # Read the source directory and create oIt tree input dictionary
-    source_tree_dict = file_manager.file_walk(TEST_FIXTURES_DIR + "/generated_files")
+    source_tree_dict = file_manager.file_walk(source_directory)
 
     # write the source tree to a file
     tree_structure = TreeStructure()
@@ -58,7 +59,7 @@ def main():
     # else, create the tree of the top level.
 
     categorizer = Categorizer()
-    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict)
+    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict, False)
 
     with open(GENERATED_DESTINATION_TREE_PATH, "w") as generated_tree_file:
         tree_structure.generate_tree_structure(
