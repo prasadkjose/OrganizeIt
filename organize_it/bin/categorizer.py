@@ -40,12 +40,11 @@ class Categorizer:
             for format_type in format_types:
                 types_to_format_dict[format_type] = cat
 
-        def categorize(config__dict, input_dict) -> dict:
+        def categorize(input_dict) -> dict:
             """Takes in the config and categorizes based on the config"""
             sorted_dict = {DIR: {}, FILES: []}
-
-            files = input_dict[FILES]
-            for file_name in files:
+            current_level_files = input_dict[FILES]
+            for file_name in current_level_files:
                 # Check if last substring with . is in the cache and add the format as dir_name to the dict
                 current_file_format = file_name.rsplit(".", 1)[1]
                 if current_file_format in types_to_format_dict:
@@ -59,6 +58,18 @@ class Categorizer:
                             DIR: {},
                             FILES: [file_name],
                         }
+
+            if recursive:
+                # Go into each sub dir of source_tree_dict and categorize recursively.
+                current_level_subdir = input_dict[DIR]
+                current_level_subdir_names = current_level_subdir.keys()
+                for dir_name in current_level_subdir_names:
+                    # Check if we have files to categorize at this level
+                    if len(current_level_subdir[dir_name][FILES]):
+                        sorted_dict[DIR][dir_name] = categorize(
+                            current_level_subdir[dir_name]
+                        )
+
             return sorted_dict
 
-        return categorize(config, source_tree_dict)
+        return categorize(source_tree_dict)

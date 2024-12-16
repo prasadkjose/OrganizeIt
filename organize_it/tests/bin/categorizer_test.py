@@ -42,9 +42,51 @@ class TestCategorizer:
 
         tree_structure = Categorizer()
         oit_tree_dict = tree_structure.categorize_dict(
-            CONFIG[1], unsorted_fixuture, True
+            CONFIG[1], unsorted_fixuture, False
         )
         assert oit_tree_dict[DIR] == {
             "photo": {FILES: ["dir.jpg"], DIR: {}},
             "document": {FILES: ["dir.pdf", "dir.doc"], DIR: {}},
+        }
+
+        oit_tree_dict_recursive = tree_structure.categorize_dict(
+            CONFIG[1], unsorted_fixuture, True
+        )
+        assert oit_tree_dict_recursive[DIR] == {
+            "photo": {FILES: ["dir.jpg"], DIR: {}},
+            "document": {FILES: ["dir.pdf", "dir.doc"], DIR: {}},
+            "subDir1": {
+                FILES: [],
+                DIR: {
+                    "photo": {FILES: ["subDir1.jpg"], DIR: {}},
+                    "document": {FILES: ["subDir1.pdf", "subDir1.doc"], DIR: {}},
+                    "subSubDir1": {
+                        FILES: [],
+                        DIR: {
+                            "photo": {FILES: ["subSubDir1.jpg"], DIR: {}},
+                            "document": {
+                                FILES: ["subSubDir1.pdf", "subSubDir1.doc"],
+                                DIR: {},
+                            },
+                        },
+                    },
+                },
+            },
+            "subDir2": {
+                FILES: [],
+                DIR: {
+                    "photo": {FILES: ["subDir2.jpg"], DIR: {}},
+                    "document": {FILES: ["subDir2.pdf", "subDir2.doc"], DIR: {}},
+                    "subSubDir2": {
+                        FILES: [],
+                        DIR: {
+                            "photo": {FILES: ["subSubDir2.jpg"], DIR: {}},
+                            "document": {
+                                FILES: ["subSubDir2.pdf", "subSubDir2.doc"],
+                                DIR: {},
+                            },
+                        },
+                    },
+                },
+            },
         }
