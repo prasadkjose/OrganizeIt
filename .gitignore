@@ -60,6 +60,8 @@ ENV/
 env.bak/
 venv.bak/
 .vscode/
+debug.log
+
 # generated test fixture 
 organize_it/tests/_fixtures/generated_files/
 

@@ -30,7 +30,7 @@ class Categorizer:
                 }
         """
         LOGGER.info(
-            "Generating clean and organised tree structure based on the provided config."
+            " - Generating clean and organised tree structure based on the provided config."
         )
 
         # create a cache of types mapped to format to quickly access them later.

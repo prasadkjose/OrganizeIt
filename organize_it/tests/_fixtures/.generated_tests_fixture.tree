@@ -1,7 +1,8 @@
 
-│   ├── generated_files/
-│       │   ├── file1.txt
+│   ├── uncategorized_test_directory/
+│       │   ├── file1.pdf
 │       │   ├── file2.txt
+│       │   ├── file3.jpg
 │       │   ├── subdir1/
 │       │       │   ├── subfileA.txt
 │       │       │   ├── subfileB.txt

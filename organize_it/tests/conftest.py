@@ -1,17 +1,21 @@
 """ Add necessary global fixtrues here """
 
+import os
 import pytest
 from organize_it.tests._fixtures.generate_samples_utils import (
     generate_samples_with_config,
 )
 from organize_it.settings import FILES, DIR, TEST_FIXTURES_DIR
 
-ROOT_DIR_NAME = "generated_files"
+GENERATED_ROOT_DIR_NAME = "generated_files"
+UNCATEGORIZED_DIR_NAME = "uncategorized_test_directory"
+CATEGORIZED_DIR_NAME = "categorized_test_directory"
+
 
 # Example input format
 directory_structure = {
     DIR: {
-        ROOT_DIR_NAME: {
+        UNCATEGORIZED_DIR_NAME: {
             DIR: {
                 "subdir1": {
                     DIR: {"subsubdir1": {FILES: ["subsubfile1.txt"], DIR: {}}},
@@ -28,4 +32,7 @@ directory_structure = {
 
 @pytest.fixture(scope="session")
 def test_setup():
-    generate_samples_with_config(TEST_FIXTURES_DIR, directory_structure)
+    generate_samples_with_config(
+        os.path.join(TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME),
+        directory_structure,
+    )

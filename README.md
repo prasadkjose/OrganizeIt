@@ -14,6 +14,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -46,9 +47,15 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 ### 4. Install the required dependencies:
 
 ```bash
-pip install -r requirements.txt
+python3 setup.py install
 ```
+## Testing
 
+Testing is done using pytest. You can find the testing configurations and fixtures in conftest.py. 
+#### 1. Run the entire suite. 
+```bash
+pytest
+```
 ## Usage
 
 ### Command Line Interface
@@ -60,7 +67,7 @@ The main functionality of **OrganizeIt** can be accessed via the command line. H
 To organize files in a directory, run:
 
 ```bash
-python organizeit.py --path /path/to/your/directory
+oIt --path /path/to/your/directory
 ```
 
 - `--path`: The directory whose files you want to organize.
@@ -71,22 +78,12 @@ This command will scan the specified directory, organize the files by their type
 
 You can customize the file organization by defining your own rules for categories. Modify the `config.json` file to suit your needs.
 
-### 3. Generate a File Tree
-
-You can generate a tree structure representation of your organized directory:
-
-```bash
-python organizeit.py --path /path/to/your/directory --generate-tree /path/to/output/file.txt
-```
-
-This will generate a textual tree of your file structure and write it to the specified file (`file.txt`).
-
-### 4. Dry-Run Mode
+### 3. Dry-Run Mode
 
 If you want to see how **OrganizeIt** would organize the files without actually moving them, use the `--dry-run` flag:
 
 ```bash
-python organizeit.py --path /path/to/your/directory --dry-run
+oIt --dry-run
 ```
 
 This will display a preview of the changes but will not modify any files.
@@ -101,26 +98,24 @@ OrganizeIt/
 ├── config.json             # Configuration file for file categories
 ├── requirements.txt        # List of required dependencies
 ├── README.md               # Project documentation
-└── utils/                  # Utility functions for file operations
+└── bin/                    # Utility functions for file operations
     ├── file_manager.py     # Handles file manipulation (move, rename, etc.)
     ├── tree_structure.py   # Generates and manages tree structure representation
     └── categorizer.py      # Handles categorization logic based on file extensions
+└── configs/                # Utility functions for file operations
+    ├── config-schema.json  # A JSON-SCHEMA file to validate the custom config.yaml
+    ├── config.yaml         # A factory YAML file where you can define your own custom file categories and their corresponding extensions.
+└── schema_validation/      # Schema validation 
+    ├── validator.py        # Validate the config file with rules set in config-schema.json
 ```
-
-### Key Files:
-- `organizeit.py`: The main script that handles the file organization process. This file is where you interact with the tool.
-- `config.json`: A JSON file where you define your own custom file categories and their corresponding extensions.
-- `file_manager.py`: Contains utility functions to perform file operations such as moving, renaming, and creating directories.
-- `tree_structure.py`: Used for generating a tree-like representation of your organized file structure.
-- `categorizer.py`: Handles the logic to categorize files based on extensions or custom rules.
 
 ## Contributing
 
-We welcome contributions to **OrganizeIt**! If you'd like to contribute, please follow these steps:
+I welcome contributions to **OrganizeIt**! If you'd like to contribute, please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.
-3. Make your changes and write tests if applicable.
+3. Make your changes and write tests if applicable. Also make sure none of the exisiting tests fail. 
 4. Submit a pull request with a clear description of your changes.
 
 ### Issues
@@ -133,4 +128,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Thank you for using **OrganizeIt**! We hope it helps you keep your files organized and your workspace clutter-free.
+Thank you for using **OrganizeIt**! I hope it helps you keep your files organized and your workspace clutter-free.

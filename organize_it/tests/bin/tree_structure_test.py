@@ -3,7 +3,7 @@
 import pytest
 import filecmp
 from organize_it.bin.tree_structure import TreeStructure
-from organize_it.tests.conftest import directory_structure
+from organize_it.tests.conftest import directory_structure, GENERATED_ROOT_DIR_NAME
 from organize_it.settings import (
     DIR,
     TMP_DIR,
@@ -22,14 +22,16 @@ class TestTreeStructure:
         tree_structure = TreeStructure()
 
         # Compare generated tree structure in .tmp file to fixture.
-        with open(f"{TMP_DIR}/.generated_tests.tree", "w") as generated_tree_file:
+        with open(
+            f"{TEST_FIXTURES_DIR}/{GENERATED_ROOT_DIR_NAME}/.generated_tests.tree", "w"
+        ) as generated_tree_file:
             tree_structure.generate_tree_structure(
                 directory_structure, "", generated_tree_file
             )
 
         assert (
             filecmp.cmp(
-                f"{TMP_DIR}/.generated_tests.tree",
+                f"{TEST_FIXTURES_DIR}/{GENERATED_ROOT_DIR_NAME}/.generated_tests.tree",
                 f"{TEST_FIXTURES_DIR}/.generated_tests_fixture.tree",
             )
             is True

@@ -1,9 +1,13 @@
 """ File Manager module which handles all product related file handling"""
 
 import os
-from pathlib import Path
 import shutil
+import json
+import logging
+
 from organize_it.settings import FILES, DIR
+
+LOGGER = logging.getLogger(__name__)
 
 
 class FileManager:
@@ -15,13 +19,14 @@ class FileManager:
         def generate_tree_structure(self, tree_dict, indent, generated_tree_file)
     """
 
-    def file_walk(self, root_dir: str) -> dict:
+    def file_walk(self, root_dir: str, file_path=None) -> dict:
         """
         Recursively lists all files and directories starting from the given root directory,
         and returns the result in a nested oIt dictionary format.
 
         Args:
             root_dir (str): The root directory from which to start the search.
+            file_path (str): File path to save the resultant dict, preferably as json.
 
         Returns:
             dict: A dictionary containing files and subdirectories in the format:
@@ -48,7 +53,7 @@ class FileManager:
         file_dict = {FILES: [], DIR: {}}
 
         # Traverse the root directory using os.walk to get directories and files
-        for dirpath, dirnames, filenames in os.walk(root_dir):
+        for dirpath, _, filenames in os.walk(root_dir):
             # Skip directories above the current directory level
             rel_dir = os.path.relpath(dirpath, root_dir)
             if dirpath == root_dir:
@@ -69,6 +74,12 @@ class FileManager:
                                 DIR
                             ],  # Recursive call for subdirectories
                         }
+        if file_path:
+            LOGGER.info(
+                " - Saving unsorted file structure to %s", os.path.basename(file_path)
+            )
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(file_dict, f, ensure_ascii=False)
 
         return file_dict
 
@@ -76,7 +87,7 @@ class FileManager:
         self, sorted_tree_dict, destination_directory, source_directory
     ):
         """Perform file operations based on the sorted_tree_dict"""
-        # TODO: Iterate through the sorted dict top-down and do the cp command.
+        # Iterate through the sorted dict top-down and do the cp command.
         current_dir = sorted_tree_dict[DIR]
         current_level_directories = current_dir.keys()
         for dir_name in current_level_directories:

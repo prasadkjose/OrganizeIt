@@ -8,8 +8,9 @@ from organize_it.settings import (
     TEST_FIXTURES_DIR,
     TMP_DIR,
     CONFIG,
-    GENERATED_DESTINATION_TREE_PATH,
+    GENERATED_DESTINATION_TREE,
     GENERATED_SOURCE_TREE,
+    GENERATED_SOURCE_JSON,
 )
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
@@ -40,9 +41,11 @@ def main():
     file_manager = FileManager()
     # TODO: Take Source and destination as CLI args.
 
-    source_directory = TEST_FIXTURES_DIR + "/generated_files"
+    source_directory = (
+        TEST_FIXTURES_DIR + "/generated_files/uncategorized_test_directory"
+    )
     # Read the source directory and create oIt tree input dictionary
-    source_tree_dict = file_manager.file_walk(source_directory)
+    source_tree_dict = file_manager.file_walk(source_directory, GENERATED_SOURCE_JSON)
 
     # write the source tree to a file
     tree_structure = TreeStructure()
@@ -61,7 +64,7 @@ def main():
     categorizer = Categorizer()
     categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict, False)
 
-    with open(GENERATED_DESTINATION_TREE_PATH, "w") as generated_tree_file:
+    with open(GENERATED_DESTINATION_TREE, "w") as generated_tree_file:
         tree_structure.generate_tree_structure(
             categorized_tree_dict, "", generated_tree_file
         )
@@ -69,7 +72,7 @@ def main():
     # TODO: copy files based on the new sorted to destination.
     # Explore SYMLINKS(unix), Junction(Windows)
 
-    # TODO: remove the files from source.
+    # TODO: optionally remove the files from source.
 
 
 if __name__ == "__main__":
