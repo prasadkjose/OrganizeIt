@@ -7,30 +7,10 @@ from organize_it.settings import (
     DIR,
     TEST_FIXTURES_CONFIGS as CONFIG,
 )
-
-unsorted_fixuture = {
-    DIR: {
-        "subDir1": {
-            DIR: {
-                "subSubDir1": {
-                    DIR: {},
-                    FILES: ["subSubDir1.jpg", "subSubDir1.pdf", "subSubDir1.doc"],
-                }
-            },
-            FILES: ["subDir1.jpg", "subDir1.pdf", "subDir1.doc"],
-        },
-        "subDir2": {
-            DIR: {
-                "subSubDir2": {
-                    DIR: {},
-                    FILES: ["subSubDir2.jpg", "subSubDir2.pdf", "subSubDir2.doc"],
-                }
-            },
-            FILES: ["subDir2.jpg", "subDir2.pdf", "subDir2.doc"],
-        },
-    },
-    FILES: ["dir.jpg", "dir.pdf", "dir.doc"],
-}
+from organize_it.tests.conftest import (
+    CATEGORIZED_DIR_DICTIONARY,
+    UNCATEGORIZED_DIR_DICTIONARY,
+)
 
 
 @pytest.mark.usefixtures("test_setup")
@@ -42,51 +22,14 @@ class TestCategorizer:
 
         tree_structure = Categorizer()
         oit_tree_dict = tree_structure.categorize_dict(
-            CONFIG[1], unsorted_fixuture, False
+            CONFIG[1], UNCATEGORIZED_DIR_DICTIONARY, False
         )
         assert oit_tree_dict[DIR] == {
-            "photo": {FILES: ["dir.jpg"], DIR: {}},
-            "document": {FILES: ["dir.pdf", "dir.doc"], DIR: {}},
+            "photo": {FILES: ["./dir.jpg"], DIR: {}},
+            "document": {FILES: ["./dir.doc", "./dir.pdf"], DIR: {}},
         }
 
         oit_tree_dict_recursive = tree_structure.categorize_dict(
-            CONFIG[1], unsorted_fixuture, True
+            CONFIG[1], UNCATEGORIZED_DIR_DICTIONARY, True
         )
-        assert oit_tree_dict_recursive[DIR] == {
-            "photo": {FILES: ["dir.jpg"], DIR: {}},
-            "document": {FILES: ["dir.pdf", "dir.doc"], DIR: {}},
-            "subDir1": {
-                FILES: [],
-                DIR: {
-                    "photo": {FILES: ["subDir1.jpg"], DIR: {}},
-                    "document": {FILES: ["subDir1.pdf", "subDir1.doc"], DIR: {}},
-                    "subSubDir1": {
-                        FILES: [],
-                        DIR: {
-                            "photo": {FILES: ["subSubDir1.jpg"], DIR: {}},
-                            "document": {
-                                FILES: ["subSubDir1.pdf", "subSubDir1.doc"],
-                                DIR: {},
-                            },
-                        },
-                    },
-                },
-            },
-            "subDir2": {
-                FILES: [],
-                DIR: {
-                    "photo": {FILES: ["subDir2.jpg"], DIR: {}},
-                    "document": {FILES: ["subDir2.pdf", "subDir2.doc"], DIR: {}},
-                    "subSubDir2": {
-                        FILES: [],
-                        DIR: {
-                            "photo": {FILES: ["subSubDir2.jpg"], DIR: {}},
-                            "document": {
-                                FILES: ["subSubDir2.pdf", "subSubDir2.doc"],
-                                DIR: {},
-                            },
-                        },
-                    },
-                },
-            },
-        }
+        assert oit_tree_dict_recursive[DIR] == CATEGORIZED_DIR_DICTIONARY

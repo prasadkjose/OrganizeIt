@@ -1,12 +1,21 @@
 
 │   ├── uncategorized_test_directory/
-│       │   ├── file1.pdf
-│       │   ├── file2.txt
-│       │   ├── file3.jpg
-│       │   ├── subdir1/
-│       │       │   ├── subfileA.txt
-│       │       │   ├── subfileB.txt
-│       │       │   ├── subsubdir1/
-│       │       │       │   ├── subsubfile1.txt
-│       │   ├── subdir2/
-│       │       │   ├── subdir2file.txt
+│       │   ├── dir.jpg
+│       │   ├── dir.pdf
+│       │   ├── dir.doc
+│       │   ├── subDir1/
+│       │       │   ├── subDir1.jpg
+│       │       │   ├── subDir1.pdf
+│       │       │   ├── subDir1.doc
+│       │       │   ├── subSubDir1/
+│       │       │       │   ├── subSubDir1.jpg
+│       │       │       │   ├── subSubDir1.pdf
+│       │       │       │   ├── subSubDir1.doc
+│       │   ├── subDir2/
+│       │       │   ├── subDir2.jpg
+│       │       │   ├── subDir2.pdf
+│       │       │   ├── subDir2.doc
+│       │       │   ├── subSubDir2/
+│       │       │       │   ├── subSubDir2.jpg
+│       │       │       │   ├── subSubDir2.pdf
+│       │       │       │   ├── subSubDir2.doc
