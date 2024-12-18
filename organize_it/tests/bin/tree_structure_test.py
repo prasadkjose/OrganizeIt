@@ -3,12 +3,12 @@
 import pytest
 import filecmp
 from organize_it.bin.tree_structure import TreeStructure
-from organize_it.tests.conftest import directory_structure, GENERATED_ROOT_DIR_NAME
+from organize_it.tests._fixtures.directory_structure_fixtures import (
+    GENERATED_ROOT_DIR_NAME,
+    directory_structure,
+)
 from organize_it.settings import (
-    DIR,
-    TMP_DIR,
     TEST_FIXTURES_DIR,
-    TEST_FIXTURES_CONFIGS as CONFIG,
 )
 
 

@@ -5,13 +5,14 @@ import logging
 import pytest
 
 from organize_it.bin.file_manager import FileManager
-from organize_it.tests.conftest import (
+from organize_it.tests._fixtures.directory_structure_fixtures import (
     GENERATED_ROOT_DIR_NAME,
     UNCATEGORIZED_DIR_NAME,
     CATEGORIZED_DIR_NAME,
     CATEGORIZED_DIR_DICTIONARY,
     UNCATEGORIZED_DIR_DICTIONARY,
 )
+
 from organize_it.settings import (
     TEST_FIXTURES_DIR,
     DIR,
@@ -66,6 +67,7 @@ class TestFileManager:
                 TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
             )
         )
+
         fixture = {
             "document": {
                 DIR: {},

@@ -100,7 +100,7 @@ class FileManager:
             current_level_directories = current_dir_contents.keys()
             for dir_name in current_level_directories:
                 for file_to_be_copied in current_dir_contents[dir_name][FILES]:
-                    # TODO: Get the relative path from the source file path
+                    # Get the relative path from the source file path
                     rel_path = os.path.dirname(file_to_be_copied)
                     dest_subdir_path = os.path.join(
                         destination_directory, rel_path, dir_name

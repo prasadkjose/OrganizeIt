@@ -7,9 +7,9 @@ from organize_it.settings import (
     DIR,
     TEST_FIXTURES_CONFIGS as CONFIG,
 )
-from organize_it.tests.conftest import (
-    CATEGORIZED_DIR_DICTIONARY,
+from organize_it.tests._fixtures.directory_structure_fixtures import (
     UNCATEGORIZED_DIR_DICTIONARY,
+    CATEGORIZED_DIR_DICTIONARY,
 )
 
 
