@@ -8,10 +8,18 @@ from organize_it.settings import (
     TEST_FIXTURES_DIR,
     TMP_DIR,
     CONFIG,
+    WORKING_DIR,
     GENERATED_DESTINATION_TREE,
     GENERATED_SOURCE_TREE,
     GENERATED_SOURCE_JSON,
 )
+from organize_it.tests._fixtures.directory_structure_fixtures import (
+    GENERATED_ROOT_DIR_NAME,
+    UNCATEGORIZED_DIR_NAME,
+    CATEGORIZED_DIR_NAME,
+)
+
+from organize_it.bin.command_line_parser import CommandLineParser
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
 from organize_it.bin.categorizer import Categorizer
@@ -33,21 +41,43 @@ def main():
     """
     logger.info(" - Starting to organize...")
 
-    # validate the YAML config first with the corresponding json-schema
+    # Validate the YAML config first with the corresponding json-schema
     schema_validator = YAMLConfigValidator(CONFIG)
     schema_validator.validate_config()
 
-    ## Current Structure
-    file_manager = FileManager()
-    # TODO: Take Source and destination as CLI args.
+    # Take Source and destination as CLI args.
+    # Order of preference
+    #   1. CLI --src
+    #   2. Source from config
+    #   3. Current directory
+    cli_parser = CommandLineParser()
+    if cli_parser.src:
+        source_directory = cli_parser.src
+    elif "source" in CONFIG:
+        source_directory = CONFIG.source
+    else:
+        source_directory = WORKING_DIR
 
-    source_directory = (
-        TEST_FIXTURES_DIR + "/generated_files/uncategorized_test_directory"
+    if cli_parser.dest:
+        destination_directory = cli_parser.dest
+    elif "destination" in CONFIG:
+        destination_directory = CONFIG.destination
+    else:
+        destination_directory = WORKING_DIR
+
+    destination_directory = os.path.join(
+        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
     )
-    # Read the source directory and create oIt tree input dictionary
+    source_directory = os.path.join(
+        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
+    )
+    # Current Structure
+    file_manager = FileManager(source_directory)
+
+    # Read the source directory and create oIt tree input dictionary and save it to a file
     source_tree_dict = file_manager.file_walk(source_directory, GENERATED_SOURCE_JSON)
 
-    # write the source tree to a file
+    # write the source tree structure result to a file
     tree_structure = TreeStructure()
     os.makedirs(TMP_DIR, exist_ok=True)
     with open(GENERATED_SOURCE_TREE, "w") as generated_tree_file:
@@ -55,20 +85,21 @@ def main():
             source_tree_dict, "", generated_tree_file
         )
 
-    ## new Structure
-    # TODO: recursive_sort:
-    # If is_recursive, Read each level of the recursively directory
-    # and generate oIt dict based on the config
-    # else, create the tree of the top level.
-
+    # Categorize the files and dirs based on the given config
     categorizer = Categorizer()
-    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict, False)
+    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict, True)
 
     with open(GENERATED_DESTINATION_TREE, "w") as generated_tree_file:
         tree_structure.generate_tree_structure(
             categorized_tree_dict, "", generated_tree_file
         )
 
+    file_manager.categorize_and_sort_file(
+        CONFIG,
+        categorized_tree_dict["dir"],
+        destination_directory,
+        source_directory,
+    )
     # TODO: copy files based on the new sorted to destination.
     # Explore SYMLINKS(unix), Junction(Windows)
 

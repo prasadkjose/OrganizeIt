@@ -3,7 +3,7 @@
 import logging
 import jsonschema
 
-from organize_it.settings import SCHEMA
+from organize_it.settings import SCHEMA, exit
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,18 +40,14 @@ class YAMLConfigValidator:
             ValidationError: If the YAML data does not conform to the validation rules.
         """
         LOGGER.info(" - Starting Config Validation.")
-        try:
-            # Create the validator instance
-            self.__obj_validator = jsonschema.Draft202012Validator(
-                self.__obj_schema,
-                format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER,
-            )
-            self.__print_errors()
-            return True
-        except jsonschema.exceptions.ValidationError as obj_exceptions:
-            LOGGER.exception(obj_exceptions)
+        # Create the validator instance
+        self.__obj_validator = jsonschema.Draft202012Validator(
+            self.__obj_schema,
+            format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER,
+        )
+        return self.__handle_errors()
 
-    def __print_errors(self):
+    def __handle_errors(self):
         obj_errors = self.__obj_validator.iter_errors(self.__yaml_data)
         lst_errors = []
         for error in obj_errors:
@@ -59,6 +55,7 @@ class YAMLConfigValidator:
 
         if len(lst_errors) == 0:
             LOGGER.info(" - Config is Successfully Validated.")
+            return True
         else:
             for item_error in lst_errors:
                 LOGGER.error(
@@ -69,3 +66,5 @@ class YAMLConfigValidator:
                     + " / Where: "
                     + str(list(item_error.absolute_path))
                 )
+
+            exit()

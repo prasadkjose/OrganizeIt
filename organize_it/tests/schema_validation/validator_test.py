@@ -18,9 +18,10 @@ class TestValidator:
         assert v.validate_config() is True
 
         v = YAMLConfigValidator(CONFIG[2])
-        v.validate_config()
-        assert (
-            # pylint: disable=line-too-long
-            "Blueprint validation error: {'png': None, 'jpg': None} is not of type 'array' / Reason: {'type': 'array'} / Where: ['format', 'photo', 'types']"
-            in caplog.text
-        )
+        with pytest.raises(SystemExit):
+            v.validate_config()
+            assert (
+                # pylint: disable=line-too-long
+                "Blueprint validation error: {'png': None, 'jpg': None} is not of type 'array' / Reason: {'type': 'array'} / Where: ['format', 'photo', 'types']"
+                in caplog.text
+            )

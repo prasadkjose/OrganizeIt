@@ -9,12 +9,15 @@ LOGGER = logging.getLogger(__name__)
 class Categorizer:
     """Categorizer class that handles categorization logic based on file extensions"""
 
-    def categorize_dict(self, config, source_tree_dict, recursive) -> dict:
+    def categorize_dict(
+        self, config: dict, source_tree_dict: dict, recursive: bool
+    ) -> dict:
         """
         Method that categorizes files based on input using the provided config and returns the categorized dictionary
         Args:
             config_dict (str): The parsed config file.
             source_tree_dict (dict): The unsorted source tree structure dictionary
+            recursive (bool): Optional flag to recurce into all sub directories and categorize them based on the config
         Returns:
             dict: A sorted and categorized dictionary containing files and subdirectories in the format:
                 {

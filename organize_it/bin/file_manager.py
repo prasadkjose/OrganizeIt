@@ -93,6 +93,9 @@ class FileManager:
         self, config, sorted_tree_dict, destination_directory, source_directory
     ):
         """Perform file operations based on the sorted_tree_dict"""
+        LOGGER.info(
+            " - Performing File operation based on the organised tree structure."
+        )
         # Iterate through the sorted dict top-down and do the cp command.
         formats_in_config = list(config["format"].keys())
 
@@ -118,3 +121,4 @@ class FileManager:
                     perform(current_dir_contents[dir_name][DIR])
 
         perform(sorted_tree_dict)
+        LOGGER.info(" - Successfully categorized and organized your files.")

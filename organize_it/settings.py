@@ -1,10 +1,10 @@
 """ settings.py - Configuration for organizeIt project """
 
+import sys
 import os
 from pathlib import Path
 import logging
 import json
-
 import yaml
 
 # setup configuration for logging
@@ -14,8 +14,12 @@ logging.basicConfig(
     handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
 )
 
+logger = logging.getLogger(__name__)
+
 FILES = "files"
 DIR = "dir"
+# Current path
+WORKING_DIR = os.getcwd()
 
 # The project root path
 ROOT_DIR = Path(__file__).resolve().parent
@@ -81,3 +85,11 @@ CONFIG = load_yaml_config(CONFIG_DIR)
 
 # Load test fixures
 TEST_FIXTURES_CONFIGS = load_yaml_config(TEST_FIXTURES_DIR)
+
+
+# Util method to exit the tool gracefully
+def exit():
+    logger.error(
+        "Exiting OrganizeIt due to an error. Please check the verbose logs for more information."
+    )
+    sys.exit(1)
