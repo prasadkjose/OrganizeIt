@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 FILES = "files"
 DIR = "dir"
+SKIP = "skip"
 # Current path
 WORKING_DIR = os.getcwd()
 
@@ -42,7 +43,9 @@ GENERATED_SOURCE_JSON = f"{TMP_DIR}/.generated.json"
 
 def load_json_schema():
     """Load json-schema file to memory"""
-    with open(os.path.join(CONFIG_DIR, "config-schema.json"), "r") as tmp_file:
+    with open(
+        os.path.join(CONFIG_DIR, "config-schema.json"), "r", encoding="utf-8"
+    ) as tmp_file:
         return json.load(tmp_file)
 
 
@@ -68,7 +71,9 @@ def load_yaml_config(yaml_dir: str) -> list[any]:
     yaml_files_list = os.listdir(yaml_dir)  # list all files in the directory
     for name in yaml_files_list:
         if name.endswith(".yaml"):  # filter by .yaml
-            with open(os.path.join(yaml_dir, name), "r") as tmp_yaml_stream:
+            with open(
+                os.path.join(yaml_dir, name), "r", encoding="utf-8"
+            ) as tmp_yaml_stream:
                 try:
                     config_list.append(yaml.full_load(tmp_yaml_stream))
                 except yaml.YAMLError as exception:
@@ -88,7 +93,7 @@ TEST_FIXTURES_CONFIGS = load_yaml_config(TEST_FIXTURES_DIR)
 
 
 # Util method to exit the tool gracefully
-def exit():
+def exit_gracefully():
     logger.error(
         "Exiting OrganizeIt due to an error. Please check the verbose logs for more information."
     )

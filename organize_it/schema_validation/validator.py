@@ -3,7 +3,7 @@
 import logging
 import jsonschema
 
-from organize_it.settings import SCHEMA, exit
+from organize_it.settings import SCHEMA, exit_gracefully
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,12 +59,10 @@ class YAMLConfigValidator:
         else:
             for item_error in lst_errors:
                 LOGGER.error(
-                    " - Blueprint validation error: "
-                    + item_error.message
-                    + " / Reason: "
-                    + str(item_error.schema)
-                    + " / Where: "
-                    + str(list(item_error.absolute_path))
+                    " - Blueprint validation error: %s / Reason: %s / Where: %s ",
+                    item_error.message,
+                    str(item_error.schema),
+                    str(list(item_error.absolute_path)),
                 )
 
-            exit()
+            exit_gracefully()

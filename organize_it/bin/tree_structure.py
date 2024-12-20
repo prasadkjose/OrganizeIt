@@ -49,7 +49,7 @@ class TreeStructure:
             }
         """
         indent += "│   "
-        # if file list files
+
         if FILES in tree_dict:
             for file in tree_dict[FILES]:
                 generated_tree_file.write(f"\n{indent}├── {file}")

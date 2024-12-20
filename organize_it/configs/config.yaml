@@ -107,3 +107,7 @@ format:
       - bz2
       - iso
       - dmg
+skip: 
+    dir:
+      - app
+      - Visual Studio Code

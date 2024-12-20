@@ -20,9 +20,9 @@ class TestCategorizer:
     def test_categorize_dict(self):
         """Test TreeStructure.categorize_dict method to create oIt input dictionary from a given config file"""
 
-        tree_structure = Categorizer()
+        tree_structure = Categorizer(CONFIG[1])
         oit_tree_dict = tree_structure.categorize_dict(
-            CONFIG[1], UNCATEGORIZED_DIR_DICTIONARY, False
+            UNCATEGORIZED_DIR_DICTIONARY, False
         )
         assert oit_tree_dict[DIR] == {
             "photo": {FILES: ["./dir.jpg"], DIR: {}},
@@ -30,6 +30,6 @@ class TestCategorizer:
         }
 
         oit_tree_dict_recursive = tree_structure.categorize_dict(
-            CONFIG[1], UNCATEGORIZED_DIR_DICTIONARY, True
+            UNCATEGORIZED_DIR_DICTIONARY, True
         )
         assert oit_tree_dict_recursive[DIR] == CATEGORIZED_DIR_DICTIONARY

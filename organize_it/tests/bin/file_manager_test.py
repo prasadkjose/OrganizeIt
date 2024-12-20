@@ -34,7 +34,7 @@ class TestFileManager:
             TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
         )
 
-        manager = FileManager(source_directory)
+        manager = FileManager(source_directory, CONFIG[1])
         tree_dict = manager.file_walk(
             source_directory,
             os.path.join(
@@ -42,6 +42,14 @@ class TestFileManager:
             ),
         )
         assert UNCATEGORIZED_DIR_DICTIONARY == tree_dict
+
+    def test_filter_excluded_names(self):
+        """Test FileManager.filter_excluded_names with a list of sample names and exclusion list"""
+        manager = FileManager("", CONFIG[1])  # get the exclusion list from the config
+
+        # Test directories exclusion
+        filtered_list = manager.filter_excluded_names([""], True)
+        assert filtered_list == [""]
 
     def test_categorize_and_sort_file(self):
         """Test FileManager.categorize_and_sort_file method to sort files with sample generated directories and files."""
@@ -51,7 +59,7 @@ class TestFileManager:
         source_directory = os.path.join(
             TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
         )
-        manager = FileManager(source_directory)
+        manager = FileManager(source_directory, CONFIG[1])
 
         manager.categorize_and_sort_file(
             CONFIG[1],
@@ -61,7 +69,7 @@ class TestFileManager:
         )
 
         # perform file walk and test with fixture.
-        manager = FileManager(destination_directory)
+        manager = FileManager(destination_directory, CONFIG[1])
         tree_dict = manager.file_walk(
             os.path.join(
                 TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME

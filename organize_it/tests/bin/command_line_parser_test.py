@@ -1,7 +1,6 @@
 """ Testing module CommandLineParser Class """
 
 import pytest
-from organize_it.bin.command_line_parser import CommandLineParser
 
 
 @pytest.mark.usefixtures("test_setup")

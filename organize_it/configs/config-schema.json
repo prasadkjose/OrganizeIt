@@ -9,9 +9,24 @@
         "destination": {
             "type": "string"
         },
-        "format": { "$ref": "#/$defs/format" }
+        "format": { "$ref": "#/$defs/format" },
+        "skip": {
+            "type": "object",
+            "description": "File System objects to skip.",
+            "properties": {
+                "dir": {
+                    "description": "A list of directory names that will not be parsed. The names will be substring matched at start and end.",
+                    "type": "array"
+                },
+                "files": {
+                    "description": "A list of file names that will not be parsed. The names will be substring matched at start and end.",
+                    "type": "array"
+                }
+            }
+        }
     },
     "required":[ "format" ],
+    "additionalProperties": false,
     "$defs": {
          "format": {
             "type": "object",

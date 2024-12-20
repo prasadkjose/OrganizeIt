@@ -5,18 +5,12 @@ import logging
 import os
 
 from organize_it.settings import (
-    TEST_FIXTURES_DIR,
     TMP_DIR,
     CONFIG,
     WORKING_DIR,
     GENERATED_DESTINATION_TREE,
     GENERATED_SOURCE_TREE,
     GENERATED_SOURCE_JSON,
-)
-from organize_it.tests._fixtures.directory_structure_fixtures import (
-    GENERATED_ROOT_DIR_NAME,
-    UNCATEGORIZED_DIR_NAME,
-    CATEGORIZED_DIR_NAME,
 )
 
 from organize_it.bin.command_line_parser import CommandLineParser
@@ -51,6 +45,12 @@ def main():
     #   2. Source from config
     #   3. Current directory
     cli_parser = CommandLineParser()
+
+    if cli_parser.move:
+        move_files = cli_parser.move
+    else:
+        move_files = False
+
     if cli_parser.src:
         source_directory = cli_parser.src
     elif "source" in CONFIG:
@@ -65,14 +65,8 @@ def main():
     else:
         destination_directory = WORKING_DIR
 
-    destination_directory = os.path.join(
-        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
-    )
-    source_directory = os.path.join(
-        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
-    )
     # Current Structure
-    file_manager = FileManager(source_directory)
+    file_manager = FileManager(source_directory, CONFIG)
 
     # Read the source directory and create oIt tree input dictionary and save it to a file
     source_tree_dict = file_manager.file_walk(source_directory, GENERATED_SOURCE_JSON)
@@ -80,16 +74,16 @@ def main():
     # write the source tree structure result to a file
     tree_structure = TreeStructure()
     os.makedirs(TMP_DIR, exist_ok=True)
-    with open(GENERATED_SOURCE_TREE, "w") as generated_tree_file:
+    with open(GENERATED_SOURCE_TREE, "w", encoding="utf-8") as generated_tree_file:
         tree_structure.generate_tree_structure(
             source_tree_dict, "", generated_tree_file
         )
 
     # Categorize the files and dirs based on the given config
-    categorizer = Categorizer()
-    categorized_tree_dict = categorizer.categorize_dict(CONFIG, source_tree_dict, True)
+    categorizer = Categorizer(CONFIG)
+    categorized_tree_dict = categorizer.categorize_dict(source_tree_dict, True)
 
-    with open(GENERATED_DESTINATION_TREE, "w") as generated_tree_file:
+    with open(GENERATED_DESTINATION_TREE, "w", encoding="utf-8") as generated_tree_file:
         tree_structure.generate_tree_structure(
             categorized_tree_dict, "", generated_tree_file
         )
@@ -99,6 +93,7 @@ def main():
         categorized_tree_dict["dir"],
         destination_directory,
         source_directory,
+        move_files,  # To delete the source files.
     )
     # TODO: copy files based on the new sorted to destination.
     # Explore SYMLINKS(unix), Junction(Windows)
