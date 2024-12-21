@@ -45,11 +45,24 @@ class TestFileManager:
 
     def test_filter_excluded_names(self):
         """Test FileManager.filter_excluded_names with a list of sample names and exclusion list"""
-        manager = FileManager("", CONFIG[1])  # get the exclusion list from the config
+        # Sample regex expressions to rest for
+        test_config = {"skip": {DIR: r".app$|\bkeystore", FILES: r".xxl$|.pga$"}}
+
+        sample_dir_names = [
+            "Visual Studo Code.app",
+            "something-keystore-123",
+            "no-regex-match",
+        ]
+        sample_file_names = ["important.xxl", "something.pga", "no-regex-match.txt"]
+
+        manager = FileManager("", test_config)  # get the exclusion list from the config
 
         # Test directories exclusion
-        filtered_list = manager.filter_excluded_names([""], True)
-        assert filtered_list == [""]
+        filtered_list = manager.filter_excluded_names(sample_dir_names, True)
+        assert filtered_list == ["no-regex-match"]
+
+        filtered_list = manager.filter_excluded_names(sample_file_names, False)
+        assert filtered_list == ["no-regex-match.txt"]
 
     def test_categorize_and_sort_file(self):
         """Test FileManager.categorize_and_sort_file method to sort files with sample generated directories and files."""

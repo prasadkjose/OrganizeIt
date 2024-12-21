@@ -4,6 +4,7 @@ import os
 import shutil
 import json
 import logging
+import re
 
 from organize_it.settings import FILES, DIR, SKIP
 
@@ -23,20 +24,26 @@ class FileManager:
         """Constructor"""
         self.source_path = source_path
 
-        # TODO: Create cache of dirs names and file type to skip. Get it form the config.
-        self.skip_dir_names = config[SKIP][DIR]
-        self.skip_file_names = config[SKIP][FILES]
+        # Regex of dirs and file names to skip.
+        if SKIP in config:
+            skip_dict = config[SKIP]
+            self.skip_dir_regex = skip_dict.get(DIR)
+            self.skip_file_regex = skip_dict.get(FILES)
 
     def filter_excluded_names(self, name_list, is_dir):
         """
-        Returns list of file/dir names after removing excluded ones.
+        Returns list of file/dir names after removing excluded ones based on the regex matcher provided in the config.
 
         Args:
             name_list (list): list of
             is_dir (bool): If the string is question is a file or diretory name
         """
-
-        return ""
+        skip_regex = self.skip_dir_regex if is_dir else self.skip_file_regex
+        return (
+            [name for name in name_list if not re.search(skip_regex, name)]
+            if skip_regex
+            else name_list
+        )
 
     def file_walk(self, current_dir: str, file_path=None) -> dict:
         """
@@ -79,17 +86,29 @@ class FileManager:
             )  # relative to source_dir
             if dirpath == current_dir:
                 # Add files directly in the root directory
-                file_dict[FILES] = sorted([os.path.join(rel_dir, f) for f in filenames])
+                file_dict[FILES] = sorted(
+                    [
+                        os.path.join(rel_dir, f)
+                        for f in self.filter_excluded_names(filenames, False)
+                    ]
+                )
 
             else:
                 # For subdirectories, add their content recursively
                 # TODO: if there are not sub dir, we don't need to return empty object. Fix tests later
                 if len(dirpath.split("/")) - 1 == len(current_dir.split("/")):
                     subdir_name = os.path.basename(dirpath)
-                    if subdir_name not in file_dict[DIR]:
+                    if subdir_name not in self.filter_excluded_names(
+                        list(file_dict[DIR].keys()), True
+                    ):
                         file_dict[DIR][subdir_name] = {
                             FILES: sorted(
-                                [os.path.join(rel_dir, f) for f in filenames]
+                                [
+                                    os.path.join(rel_dir, f)
+                                    for f in self.filter_excluded_names(
+                                        filenames, False
+                                    )
+                                ]
                             ),
                             # Recursive call for subdirectories
                             DIR: self.file_walk(dirpath)[DIR],

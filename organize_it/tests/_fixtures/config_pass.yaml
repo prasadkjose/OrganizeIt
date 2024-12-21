@@ -10,9 +10,4 @@ format:
   compressed: 
     types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
 skip:
-  directories:
-    - app
-    - application
-  files:
-    - skip # test for start substring
-    - .skip # test for extension
+  dir: "app$|application$"
