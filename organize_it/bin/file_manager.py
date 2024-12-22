@@ -35,15 +35,18 @@ class FileManager:
         Returns list of file/dir names after removing excluded ones based on the regex matcher provided in the config.
 
         Args:
-            name_list (list): list of
+            name_list (list): list of fie/dir names to be processed
             is_dir (bool): If the string is question is a file or diretory name
         """
-        skip_regex = self.skip_dir_regex if is_dir else self.skip_file_regex
-        return (
-            [name for name in name_list if not re.search(skip_regex, name)]
-            if skip_regex
-            else name_list
-        )
+        if hasattr(self, "skip_dir_regex") or hasattr(self, "skip_file_regex"):
+            skip_regex = self.skip_dir_regex if is_dir else self.skip_file_regex
+            return (
+                [name for name in name_list if not re.search(skip_regex, name)]
+                if skip_regex
+                else name_list
+            )
+        else:
+            return name_list
 
     def file_walk(self, current_dir: str, file_path=None) -> dict:
         """
@@ -79,7 +82,7 @@ class FileManager:
         file_dict = {FILES: [], DIR: {}}
 
         # Traverse the root directory using os.walk to get directories and files
-        for dirpath, _, filenames in os.walk(current_dir):
+        for dirpath, dirname, filenames in os.walk(current_dir):
             # Skip directories above the current directory level
             rel_dir = os.path.relpath(
                 dirpath, self.source_path
@@ -114,9 +117,7 @@ class FileManager:
                             DIR: self.file_walk(dirpath)[DIR],
                         }
         if file_path:
-            LOGGER.info(
-                " - Saving unsorted file structure to %s", os.path.basename(file_path)
-            )
+            LOGGER.info(" - Saving file structure to %s", os.path.basename(file_path))
             with open(file_path, "w", encoding="utf-8") as f:
                 json.dump(file_dict, f, ensure_ascii=False)
 

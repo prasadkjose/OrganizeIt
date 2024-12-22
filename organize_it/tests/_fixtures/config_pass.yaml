@@ -10,4 +10,4 @@ format:
   compressed: 
     types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
 skip:
-  dir: "app$|application$"
+  dir: r"app$|application$"

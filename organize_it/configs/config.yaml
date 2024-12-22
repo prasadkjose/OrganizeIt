@@ -108,6 +108,4 @@ format:
       - iso
       - dmg
 skip: 
-    dir:
-      - app
-      - Visual Studio Code
+    dir: r".app$"
