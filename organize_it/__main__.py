@@ -5,6 +5,7 @@ import logging
 import os
 
 from organize_it.settings import (
+    DIR,
     TMP_DIR,
     CONFIG,
     WORKING_DIR,
@@ -66,10 +67,10 @@ def main():
         destination_directory = WORKING_DIR
 
     # Current Structure
-    file_manager = FileManager(source_directory, CONFIG)
+    file_manager = FileManager(source_directory, destination_directory, CONFIG)
 
     # Read the source directory and create oIt tree input dictionary and save it to a file
-    source_tree_dict = file_manager.file_walk(source_directory, GENERATED_SOURCE_JSON)
+    source_tree_dict = file_manager.file_walk(None, GENERATED_SOURCE_JSON)
 
     # write the source tree structure result to a file
     tree_structure = TreeStructure()
@@ -90,9 +91,7 @@ def main():
 
     file_manager.categorize_and_sort_file(
         CONFIG,
-        categorized_tree_dict["dir"],
-        destination_directory,
-        source_directory,
+        categorized_tree_dict[DIR],
         move_files,  # To delete the source files.
     )
     # TODO: copy files based on the new sorted to destination.

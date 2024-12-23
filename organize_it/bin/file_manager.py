@@ -11,6 +11,27 @@ from organize_it.settings import FILES, DIR, SKIP
 LOGGER = logging.getLogger(__name__)
 
 
+def sanitize_file_path(path: str) -> str:
+    """
+    Sanitizes a file or directory path by:
+    - Removing trailing slashes or backslashes
+    - Normalizing path separators to the OS default
+
+    Args:
+        path (str): The file or directory path to sanitize.
+
+    Returns:
+        str: The sanitized path.
+    """
+    # Remove trailing slashes or backslashes
+    sanitized_path = path.rstrip(os.sep)
+
+    # Normalize path (to use OS-specific separator)
+    sanitized_path = os.path.normpath(sanitized_path)
+
+    return sanitized_path
+
+
 class FileManager:
     """
     A class to handle complex file operations such as traversal, generating directory tree. etc
@@ -20,9 +41,10 @@ class FileManager:
         def generate_tree_structure(self, tree_dict, indent, generated_tree_file)
     """
 
-    def __init__(self, source_path, config):
+    def __init__(self, source_path, destination_path, config):
         """Constructor"""
-        self.source_path = source_path
+        self.source_path = sanitize_file_path(source_path)
+        self.destination_path = sanitize_file_path(destination_path)
 
         # Regex of dirs and file names to skip.
         if SKIP in config:
@@ -30,7 +52,7 @@ class FileManager:
             self.skip_dir_regex = skip_dict.get(DIR)
             self.skip_file_regex = skip_dict.get(FILES)
 
-    def filter_excluded_names(self, name_list, is_dir):
+    def filter_excluded_names(self, name_list, is_dir) -> list:
         """
         Returns list of file/dir names after removing excluded ones based on the regex matcher provided in the config.
 
@@ -48,13 +70,13 @@ class FileManager:
         else:
             return name_list
 
-    def file_walk(self, current_dir: str, file_path=None) -> dict:
+    def file_walk(self, current_dir: str = None, file_path: str = None) -> dict:
         """
         Recursively lists all files and directories starting from the given root directory,
         and returns the result in a nested oIt dictionary format.
 
         Args:
-            current_dir (str): The root directory from which to start the search.
+            current_dir (str): The current directory from which to perform the search.
             file_path (str): File path to save the resultant dict, preferably as json.
 
         Returns:
@@ -74,6 +96,10 @@ class FileManager:
             FileNotFoundError: If the current_dir does not exist.
             NotADirectoryError: If the provided current_dir is not a directory.
         """
+        # Take root source directory from the class member.
+        if current_dir is None:
+            current_dir = self.source_path
+
         if not os.path.isdir(current_dir):
             raise NotADirectoryError(
                 f"The provided path {current_dir} is not a valid directory."
@@ -82,7 +108,7 @@ class FileManager:
         file_dict = {FILES: [], DIR: {}}
 
         # Traverse the root directory using os.walk to get directories and files
-        for dirpath, dirname, filenames in os.walk(current_dir):
+        for dirpath, _, filenames in os.walk(current_dir):
             # Skip directories above the current directory level
             rel_dir = os.path.relpath(
                 dirpath, self.source_path
@@ -127,8 +153,6 @@ class FileManager:
         self,
         config: dict,
         sorted_tree_dict: dict,
-        destination_directory: dict,
-        source_directory: str,
         move_files: bool = False,
     ):
         """
@@ -147,11 +171,6 @@ class FileManager:
                         For example, it could contain file extensions or patterns to group by file type.
             sorted_tree_dict (dict): A dictionary representing the structure of the files to be categorized. It maps files or
                                     directories to their respective categories.
-            destination_directory (dict): A dictionary containing the absolute path or structure of the destination directory
-                                        where the sorted files will be placed. It can include subdirectories or any other
-                                        required directory structure for organizing the files.
-            source_directory (str): The absolute or relative path to the source directory that contains the files to be
-                                    categorized and sorted.
             move_files (bool): A flag indicating whether the files should be moved (True) or copied (False) to the destination
                             directory. Default is False (copy).
         """
@@ -168,14 +187,14 @@ class FileManager:
                     # Get the relative path from the source file path
                     rel_path = os.path.dirname(file_to_be_copied)
                     dest_subdir_path = os.path.join(
-                        destination_directory, rel_path, dir_name
+                        self.destination_path, rel_path, dir_name
                     )
                     os.makedirs(dest_subdir_path, exist_ok=True)
 
                     cleaned_file_name = file_to_be_copied
                     if file_to_be_copied.startswith("./"):
                         cleaned_file_name = file_to_be_copied.replace(("."), "", 1)
-                    source_file_path = f"{source_directory}/{cleaned_file_name}"
+                    source_file_path = f"{self.source_path}/{cleaned_file_name}"
                     if move_files:
                         shutil.move(source_file_path, dest_subdir_path)
                     else:

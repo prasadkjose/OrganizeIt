@@ -33,10 +33,11 @@ class TestFileManager:
         source_directory = os.path.join(
             TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
         )
+        sample_dest_dir = "some/dummy/path"
 
-        manager = FileManager(source_directory, CONFIG[1])
+        manager = FileManager(source_directory, sample_dest_dir, CONFIG[1])
         tree_dict = manager.file_walk(
-            source_directory,
+            None,
             os.path.join(
                 TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
             ),
@@ -55,7 +56,9 @@ class TestFileManager:
         ]
         sample_file_names = ["important.xxl", "something.pga", "no-regex-match.txt"]
 
-        manager = FileManager("", test_config)  # get the exclusion list from the config
+        manager = FileManager(
+            "", "", test_config
+        )  # get the exclusion list from the config
 
         # Test directories exclusion
         filtered_list = manager.filter_excluded_names(sample_dir_names, True)
@@ -72,22 +75,16 @@ class TestFileManager:
         source_directory = os.path.join(
             TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
         )
-        manager = FileManager(source_directory, CONFIG[1])
+        manager = FileManager(source_directory, destination_directory, CONFIG[1])
 
         manager.categorize_and_sort_file(
             CONFIG[1],
             CATEGORIZED_DIR_DICTIONARY,
-            destination_directory,
-            source_directory,
         )
 
         # perform file walk and test with fixture.
-        manager = FileManager(destination_directory, CONFIG[1])
-        tree_dict = manager.file_walk(
-            os.path.join(
-                TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
-            )
-        )
+        manager = FileManager(destination_directory, "", CONFIG[1])
+        tree_dict = manager.file_walk(None)
 
         fixture = {
             "document": {
