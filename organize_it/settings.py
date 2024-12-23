@@ -1,4 +1,4 @@
-""" settings.py - Configuration for organizeIt project """
+""" settings.py - Configuration constants and utility methods for organizeIt project """
 
 import sys
 import os
@@ -49,7 +49,7 @@ def load_json_schema():
         return json.load(tmp_file)
 
 
-def load_yaml_config(yaml_dir: str) -> list[any]:
+def load_yaml(yaml_dir: str) -> list[any]:
     """
     Loads YAML configuration files from a specified directory and returns their contents as a list.
 
@@ -86,10 +86,10 @@ def load_yaml_config(yaml_dir: str) -> list[any]:
 SCHEMA = load_json_schema()
 
 # The YAML config file
-CONFIG = load_yaml_config(CONFIG_DIR)
+CONFIG = load_yaml(CONFIG_DIR)
 
 # Load test fixures
-TEST_FIXTURES_CONFIGS = load_yaml_config(TEST_FIXTURES_DIR)
+TEST_FIXTURES_CONFIGS = load_yaml(TEST_FIXTURES_DIR)
 
 
 # Util method to exit the tool gracefully

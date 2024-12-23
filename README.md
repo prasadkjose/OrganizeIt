@@ -114,6 +114,7 @@ OrganizeIt/
 I welcome contributions to **OrganizeIt**! If you'd like to contribute, please follow these steps:
 
 1. Fork the repository.
+2. ```python3 setup.py install``` to start developing.
 2. Create a new branch for your feature or bug fix.
 3. Make your changes and write tests if applicable. Also make sure none of the exisiting tests fail. 
 4. Submit a pull request with a clear description of your changes.

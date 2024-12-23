@@ -1,0 +1,9 @@
+- "Welcome to OrganizeIt! Your ultimate file organizing assistant."
+- input:
+    print: "Ready to transform your chaotic folders into order? (Press h for help or y to proceed)"
+- input: 
+    print: "Do you have a configuration file to load? (Press y for yes, n for no)"
+- input: 
+    print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
+    arg: "src"
+  

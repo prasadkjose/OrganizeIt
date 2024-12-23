@@ -3,7 +3,11 @@
 
 import logging
 import os
-
+from organize_it.tests._fixtures.directory_structure_fixtures import (
+    GENERATED_ROOT_DIR_NAME,
+    UNCATEGORIZED_DIR_NAME,
+    CATEGORIZED_DIR_NAME,
+)
 from organize_it.settings import (
     DIR,
     TMP_DIR,
@@ -12,9 +16,10 @@ from organize_it.settings import (
     GENERATED_DESTINATION_TREE,
     GENERATED_SOURCE_TREE,
     GENERATED_SOURCE_JSON,
+    TEST_FIXTURES_DIR,
 )
 
-from organize_it.bin.command_line_parser import CommandLineParser
+from organize_it.cli.input_arg_parser import InputArgParser
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
 from organize_it.bin.categorizer import Categorizer
@@ -45,7 +50,7 @@ def main():
     #   1. CLI --src
     #   2. Source from config
     #   3. Current directory
-    cli_parser = CommandLineParser()
+    cli_parser = InputArgParser()
 
     if cli_parser.move:
         move_files = cli_parser.move
@@ -66,6 +71,12 @@ def main():
     else:
         destination_directory = WORKING_DIR
 
+    destination_directory = os.path.join(
+        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
+    )
+    source_directory = os.path.join(
+        TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
+    )
     # Current Structure
     file_manager = FileManager(source_directory, destination_directory)
 
