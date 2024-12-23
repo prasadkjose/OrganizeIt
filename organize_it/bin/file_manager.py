@@ -4,9 +4,8 @@ import os
 import shutil
 import json
 import logging
-import re
 
-from organize_it.settings import FILES, DIR, SKIP
+from organize_it.settings import FILES, DIR
 
 LOGGER = logging.getLogger(__name__)
 
@@ -41,34 +40,10 @@ class FileManager:
         def generate_tree_structure(self, tree_dict, indent, generated_tree_file)
     """
 
-    def __init__(self, source_path, destination_path, config):
+    def __init__(self, source_path, destination_path):
         """Constructor"""
         self.source_path = sanitize_file_path(source_path)
         self.destination_path = sanitize_file_path(destination_path)
-
-        # Regex of dirs and file names to skip.
-        if SKIP in config:
-            skip_dict = config[SKIP]
-            self.skip_dir_regex = skip_dict.get(DIR)
-            self.skip_file_regex = skip_dict.get(FILES)
-
-    def filter_excluded_names(self, name_list, is_dir) -> list:
-        """
-        Returns list of file/dir names after removing excluded ones based on the regex matcher provided in the config.
-
-        Args:
-            name_list (list): list of fie/dir names to be processed
-            is_dir (bool): If the string is question is a file or diretory name
-        """
-        if hasattr(self, "skip_dir_regex") or hasattr(self, "skip_file_regex"):
-            skip_regex = self.skip_dir_regex if is_dir else self.skip_file_regex
-            return (
-                [name for name in name_list if not re.search(skip_regex, name)]
-                if skip_regex
-                else name_list
-            )
-        else:
-            return name_list
 
     def file_walk(self, current_dir: str = None, file_path: str = None) -> dict:
         """
@@ -115,29 +90,17 @@ class FileManager:
             )  # relative to source_dir
             if dirpath == current_dir:
                 # Add files directly in the root directory
-                file_dict[FILES] = sorted(
-                    [
-                        os.path.join(rel_dir, f)
-                        for f in self.filter_excluded_names(filenames, False)
-                    ]
-                )
+                file_dict[FILES] = sorted([os.path.join(rel_dir, f) for f in filenames])
 
             else:
                 # For subdirectories, add their content recursively
                 # TODO: if there are not sub dir, we don't need to return empty object. Fix tests later
                 if len(dirpath.split("/")) - 1 == len(current_dir.split("/")):
                     subdir_name = os.path.basename(dirpath)
-                    if subdir_name not in self.filter_excluded_names(
-                        list(file_dict[DIR].keys()), True
-                    ):
+                    if subdir_name not in file_dict[DIR]:
                         file_dict[DIR][subdir_name] = {
                             FILES: sorted(
-                                [
-                                    os.path.join(rel_dir, f)
-                                    for f in self.filter_excluded_names(
-                                        filenames, False
-                                    )
-                                ]
+                                [os.path.join(rel_dir, f) for f in filenames]
                             ),
                             # Recursive call for subdirectories
                             DIR: self.file_walk(dirpath)[DIR],

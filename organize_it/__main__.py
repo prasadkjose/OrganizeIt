@@ -67,7 +67,7 @@ def main():
         destination_directory = WORKING_DIR
 
     # Current Structure
-    file_manager = FileManager(source_directory, destination_directory, CONFIG)
+    file_manager = FileManager(source_directory, destination_directory)
 
     # Read the source directory and create oIt tree input dictionary and save it to a file
     source_tree_dict = file_manager.file_walk(None, GENERATED_SOURCE_JSON)
@@ -94,10 +94,7 @@ def main():
         categorized_tree_dict[DIR],
         move_files,  # To delete the source files.
     )
-    # TODO: copy files based on the new sorted to destination.
     # Explore SYMLINKS(unix), Junction(Windows)
-
-    # TODO: optionally remove the files from source.
 
 
 if __name__ == "__main__":

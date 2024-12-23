@@ -109,3 +109,4 @@ format:
       - dmg
 skip: 
     dir: r".app$"
+    files: "sign"

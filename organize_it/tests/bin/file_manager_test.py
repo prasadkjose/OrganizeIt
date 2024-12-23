@@ -35,7 +35,7 @@ class TestFileManager:
         )
         sample_dest_dir = "some/dummy/path"
 
-        manager = FileManager(source_directory, sample_dest_dir, CONFIG[1])
+        manager = FileManager(source_directory, sample_dest_dir)
         tree_dict = manager.file_walk(
             None,
             os.path.join(
@@ -43,29 +43,6 @@ class TestFileManager:
             ),
         )
         assert UNCATEGORIZED_DIR_DICTIONARY == tree_dict
-
-    def test_filter_excluded_names(self):
-        """Test FileManager.filter_excluded_names with a list of sample names and exclusion list"""
-        # Sample regex expressions to rest for
-        test_config = {"skip": {DIR: r".app$|\bkeystore", FILES: r".xxl$|.pga$"}}
-
-        sample_dir_names = [
-            "Visual Studo Code.app",
-            "something-keystore-123",
-            "no-regex-match",
-        ]
-        sample_file_names = ["important.xxl", "something.pga", "no-regex-match.txt"]
-
-        manager = FileManager(
-            "", "", test_config
-        )  # get the exclusion list from the config
-
-        # Test directories exclusion
-        filtered_list = manager.filter_excluded_names(sample_dir_names, True)
-        assert filtered_list == ["no-regex-match"]
-
-        filtered_list = manager.filter_excluded_names(sample_file_names, False)
-        assert filtered_list == ["no-regex-match.txt"]
 
     def test_categorize_and_sort_file(self):
         """Test FileManager.categorize_and_sort_file method to sort files with sample generated directories and files."""
@@ -75,7 +52,7 @@ class TestFileManager:
         source_directory = os.path.join(
             TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
         )
-        manager = FileManager(source_directory, destination_directory, CONFIG[1])
+        manager = FileManager(source_directory, destination_directory)
 
         manager.categorize_and_sort_file(
             CONFIG[1],
@@ -83,7 +60,7 @@ class TestFileManager:
         )
 
         # perform file walk and test with fixture.
-        manager = FileManager(destination_directory, "", CONFIG[1])
+        manager = FileManager(destination_directory, "")
         tree_dict = manager.file_walk(None)
 
         fixture = {
