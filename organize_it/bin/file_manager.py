@@ -40,7 +40,7 @@ class FileManager:
         def generate_tree_structure(self, tree_dict, indent, generated_tree_file)
     """
 
-    def __init__(self, source_path, destination_path):
+    def __init__(self, source_path: str, destination_path: str = None):
         """Constructor"""
         self.source_path = sanitize_file_path(source_path)
         self.destination_path = sanitize_file_path(destination_path)
@@ -169,3 +169,37 @@ class FileManager:
 
         perform(sorted_tree_dict)
         LOGGER.info(" - Successfully categorized and organized your files.")
+
+    @staticmethod
+    def create_and_write_file(file_path: str, callback):
+        """
+        Creates a file at the specified file_path, ensuring that the parent directory exists.
+        Then, it writes content to the file by calling the provided callback function.
+
+        Args:
+            file_path (str): The path (including file name) where the file should be created.
+            callback (function): A function that takes a file object as its argument and writes to the file.
+
+        Raises:
+            OSError: If there is an error creating the directory or opening the file.
+            Exception: If the callback function raises an exception during execution.
+
+        Example:
+            def write_content(file):
+                file.write("Hello, World!")
+
+            create_and_write_file("/path/to/file.txt", write_content)
+        """
+        # Split the file path into parent directory and file name
+        parent_path, file_name = os.path.split(file_path)
+
+        # Ensure the parent directory exists
+        os.makedirs(parent_path, exist_ok=True)
+
+        # Open the file and invoke the callback function to write content
+        try:
+            with open(file_path, "w", encoding="utf-8") as generated_tree_file:
+                callback(generated_tree_file)
+        except Exception as e:
+            # Optionally handle exceptions, e.g., logging
+            raise Exception(f"Failed to write to file {file_path}: {e}")

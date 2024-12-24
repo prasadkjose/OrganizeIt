@@ -1,9 +1,53 @@
+# OrganizeIt Interactive CLI - YAML Configuration
+# This YAML file defines a series of inputs and prompts for the OrganizeIt interactive file
+# organization tool. Each section corresponds to a step or interaction in the process of organizing
+# files and directories. The `print` field defines the message displayed to the user, and the `arg`
+# field specifies any associated command-line argument that is captured as input.
+
 - "Welcome to OrganizeIt! Your ultimate file organizing assistant."
 - input:
     print: "Ready to transform your chaotic folders into order? (Press h for help or y to proceed)"
+    response: 
+        y: "proceed"
+        h: "help_me"
 - input: 
     print: "Do you have a configuration file to load? (Press y for yes, n for no)"
+    response: 
+        y: "proceed_down"
+        n: "proceed"
+    # TODO: take config file as arg
+    input: 
+        print: "Enter your configuration file Path"
+        arg: config
 - input: 
     print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
     arg: "src"
+- input:
+    print: "Enter your destination directory: (We'll create it for you if it doesn't exist. A tidy home awaits your files!)"
+    arg: "dest"
+- input:
+    print: "Here's the layout of your source directory: We'll map out the structure for you. (Press y to view it, or n to skip)"
+    response: 
+        y: "view_tree"
+        n: "proceed"
+- "Organizing your files... Hold tight as OrganizeIt sorts everything into neat categories."
+- input:
+    print: "Want to preview the result? Press Y to see how everything looks, or n to skip this step."
+    response: 
+        y: "view_tree"
+        n: "proceed"
+- input:
+    print: "Looks good? Would you like to move (press m) or copy (press c) your files over to the destination?"
+    response: 
+        m: "set_arg"
+        c: "set_arg"
+- input:
+    print: "Got more directories to organize? (Press y to organize another directory, or n to wrap things up)"
+    response: 
+        y: "restart"
+        n: "proceed"
+- "Mission accomplished! Your files are now beautifully organized. Thanks for choosing OrganizeIt — where clutter meets its match!"
+
+  
+  
   

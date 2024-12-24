@@ -8,6 +8,7 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
     UNCATEGORIZED_DIR_NAME,
     CATEGORIZED_DIR_NAME,
 )
+
 from organize_it.settings import (
     DIR,
     TMP_DIR,
@@ -77,6 +78,8 @@ def main():
     source_directory = os.path.join(
         TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
     )
+
+    # TODO: If cli is in interactive mode, then source tree will be will be generated already. So skip this part.
     # Current Structure
     file_manager = FileManager(source_directory, destination_directory)
 
@@ -85,20 +88,22 @@ def main():
 
     # write the source tree structure result to a file
     tree_structure = TreeStructure()
-    os.makedirs(TMP_DIR, exist_ok=True)
-    with open(GENERATED_SOURCE_TREE, "w", encoding="utf-8") as generated_tree_file:
-        tree_structure.generate_tree_structure(
-            source_tree_dict, "", generated_tree_file
-        )
-
+    FileManager.create_and_write_file(
+        GENERATED_SOURCE_TREE,
+        lambda file_stream: tree_structure.generate_tree_structure(
+            source_tree_dict, "", file_stream
+        ),
+    )
     # Categorize the files and dirs based on the given config
     categorizer = Categorizer(CONFIG)
     categorized_tree_dict = categorizer.categorize_dict(source_tree_dict, True)
 
-    with open(GENERATED_DESTINATION_TREE, "w", encoding="utf-8") as generated_tree_file:
-        tree_structure.generate_tree_structure(
-            categorized_tree_dict, "", generated_tree_file
-        )
+    FileManager.create_and_write_file(
+        GENERATED_DESTINATION_TREE,
+        lambda file_stream: tree_structure.generate_tree_structure(
+            categorized_tree_dict, "", file_stream
+        ),
+    )
 
     file_manager.categorize_and_sort_file(
         CONFIG,

@@ -37,11 +37,8 @@ class InputArgParser:
 
         if bool(self._interactive):
             # Get the args from the interactive CLI
-            # self._source_dir, self._dest_dir, self._move = self.interactive_cli()
+            self._source_dir, self._dest_dir, self._move = self.interactive_cli()
             self.interactive_cli()
-            self._source_dir = cli_args.src
-            self._dest_dir = cli_args.dest
-            self._move = cli_args.move
         else:
             self._source_dir = cli_args.src
             self._dest_dir = cli_args.dest
@@ -67,5 +64,5 @@ class InputArgParser:
 
     def interactive_cli(self) -> dict:
         interactive_cli = InteractiveCLI()
-        a = interactive_cli.start_interactive_prompts()
-        # return itemgetter("src", "dest", "move")(a)
+        arg_dict = interactive_cli.start_interactive_prompts()
+        return itemgetter("src", "dest", "move")(arg_dict)
