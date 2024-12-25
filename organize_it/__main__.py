@@ -11,7 +11,6 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
 
 from organize_it.settings import (
     DIR,
-    TMP_DIR,
     CONFIG,
     WORKING_DIR,
     GENERATED_DESTINATION_TREE,

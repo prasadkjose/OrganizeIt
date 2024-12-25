@@ -1,7 +1,6 @@
 """ CLI arg parser module for the project """
 
 import argparse
-from operator import itemgetter
 from organize_it.cli.interactive_cli import InteractiveCLI
 
 
@@ -37,8 +36,10 @@ class InputArgParser:
 
         if bool(self._interactive):
             # Get the args from the interactive CLI
-            self._source_dir, self._dest_dir, self._move = self.interactive_cli()
-            self.interactive_cli()
+            args = self.interactive_cli()
+            self._source_dir, self._dest_dir, self._move = [
+                args.get(f) for f in ["src", "dest", "move"]
+            ]
         else:
             self._source_dir = cli_args.src
             self._dest_dir = cli_args.dest
@@ -65,4 +66,4 @@ class InputArgParser:
     def interactive_cli(self) -> dict:
         interactive_cli = InteractiveCLI()
         arg_dict = interactive_cli.start_interactive_prompts()
-        return itemgetter("src", "dest", "move")(arg_dict)
+        return arg_dict
