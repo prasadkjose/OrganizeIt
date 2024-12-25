@@ -1,0 +1,17 @@
+OrganizeIt - Help Documentation
+Welcome to OrganizeIt, a CLI tool designed to help you easily organize files and directories according to a configuration file. This tool allows you to sort, move, and manage your files in an automated way, helping you maintain an organized file system.
+
+Key Commands
+    h: Display help information and instructions.
+    y: Yes (to proceed with the current step or option).
+    n: No (to skip the current step or option).
+    m: Move the files to the destination directory.
+    c: Copy the files to the destination directory.
+
+Tips & Additional Notes
+Configuration File: Make sure your configuration file is set up before starting the tool if you want specific rules for organizing your files.
+Preview: Always take a moment to preview the result before moving or copying files, as these operations cannot be undone.
+Directories: Double-check your source and destination directories to ensure you’re organizing the right files in the right places.
+
+I hope you enjoy using OrganizeIt! Let me know if you need any additional help, or if there are other features you'd like to see added in the future.
+
