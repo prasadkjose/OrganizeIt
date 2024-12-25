@@ -10,6 +10,10 @@
     response: 
         y: "proceed"
         h: "help_me"
+        input: 
+            y:
+                print: "Please press enter to close the help me section."
+                arg: config
 - input: 
     print: "Do you have a configuration file to load? (Press y for yes, n for no)"
     response: 
@@ -17,8 +21,9 @@
         n: "proceed"
     # TODO: take config file as arg
     input: 
-        print: "Enter your configuration file Path"
-        arg: config
+        y:
+            print: "Enter your configuration file Path"
+            arg: config
 - input: 
     print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
     arg: "src"
