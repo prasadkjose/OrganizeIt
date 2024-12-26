@@ -9,6 +9,8 @@
 - Option to organize files into a hierarchical tree structure for easy navigation.
 - Simple, easy-to-use command-line interface.
 - Supports recursive file handling for organizing files in nested directories.
+- Supports regex-based exclusion of files and directories, ensuring that system or other location-sensitive files remain unaffected.
+
 
 ## Table of Contents
 
@@ -67,46 +69,61 @@ The main functionality of **OrganizeIt** can be accessed via the command line. H
 To organize files in a directory, run:
 
 ```bash
-oIt --path /path/to/your/directory
+oIt --src /path/to/your/directory --dest /path/to/your/destination
 ```
 
-- `--path`: The directory whose files you want to organize.
+- `--src`: The directory whose files you want to organize.
+- `--dest`: The detination directory wwhere the organized files will be moved/copied to.
+- By default, your files will be copied. To move your files into an organized structure, use the `--move` flag. Please note that this operation is permanent and cannot be undone.
 
-This command will scan the specified directory, organize the files by their types into appropriate subdirectories (such as `Images`, `Documents`, `Videos`, etc.), and move the files accordingly.
+
+This command will scan the specified source directory, organize the files by their types into appropriate subdirectories (such as `Images`, `Documents`, `Videos`, etc.), and move the files accordingly.
 
 ### 2. Organize Files with a Custom Directory Structure
 
-You can customize the file organization by defining your own rules for categories. Modify the `config.json` file to suit your needs.
+You can customize the file organization by defining your own rules for categories. Modify the `configs/config.json` file to suit your needs.
 
-### 3. Dry-Run Mode
 
-If you want to see how **OrganizeIt** would organize the files without actually moving them, use the `--dry-run` flag:
+### 3. Interactive Mode
+
+Interactive mode allows you to guide the CLI tool through a step-by-step process, making it easier to configure settings, choose actions, and preview results before executing operations
+If you want to see how **OrganizeIt** would organize the files without actually moving them, use the `-i` flag to run the tool in interactive mode and view the source and resultant trees:
 
 ```bash
-oIt --dry-run
+oIt -i
 ```
 
-This will display a preview of the changes but will not modify any files.
+This way, you can display a preview of the result but will not modify any files. You can at any time quit the tool and keep you file structure unaltered. 
+
+If you tech savvy, you can find the generated dictionaries and tree structures in the `.tmp` directory in the project.
 
 ## Project Structure
 
 Here's an overview of the **OrganizeIt** project structure:
 
 ```
-OrganizeIt/
-├── organizeit.py           # Main file for organizing the files
-├── config.json             # Configuration file for file categories
-├── requirements.txt        # List of required dependencies
-├── README.md               # Project documentation
-└── bin/                    # Utility functions for file operations
+organizeIt/
+├── __main__.py             # Main entry point for the tool 
+├── settings.py             # Common utility methods and constants used in the tool.
+├── bin/                    # Utility class implementations
     ├── file_manager.py     # Handles file manipulation (move, rename, etc.)
-    ├── tree_structure.py   # Generates and manages tree structure representation
+    ├── tree_structure.py   # Generates and manages tree structure representation   
     └── categorizer.py      # Handles categorization logic based on file extensions
-└── configs/                # Utility functions for file operations
-    ├── config-schema.json  # A JSON-SCHEMA file to validate the custom config.yaml
-    ├── config.yaml         # A factory YAML file where you can define your own custom file categories and their corresponding extensions.
-└── schema_validation/      # Schema validation 
-    ├── validator.py        # Validate the config file with rules set in config-schema.json
+├── cli/
+    ├── input_arg_parser    # CLI arguments parser module.
+    ├── interactive_cli     # Module for Interactice mode use inputs
+    └── input_script.yaml   # YAML file that defines a list of use prompt flows for your CLI tool in interactive mode
+├── configs/                # Utility functions for file operations
+    ├── config-schema.json  # A JSON-Schema file to validate the custom config.yaml
+    └── config.yaml         # A factory YAML file where you can define your own custom file categories and their corresponding extensions.
+├── schema_validation/      # Schema validation 
+    └── validator.py        # Validate the config file with rules set in config-schema.json
+├── .tmp/                   # The .tmp directory stores temporary files that are short-lived and can be safely deleted when no longer needed.
+└── tests/                  # Testing Module. It follows the same structure as the project itself. 
+    ├── _fixtures_          # All necessary fixtures used in pytest
+        └── .generated      # Generated files for testing. 
+    └── conftest.py         # Configuration file used in pytest to define fixtures, hooks, and other settings that are shared across multiple test modules.
+    
 ```
 
 ## Contributing
@@ -121,7 +138,7 @@ I welcome contributions to **OrganizeIt**! If you'd like to contribute, please f
 
 ### Issues
 
-If you find any bugs or have suggestions for improvements, feel free to [open an issue](https://github.com/prasadkjose/OrganizeIt/issues). We’re happy to review and address any problems.
+If you find any bugs or have suggestions for improvements, feel free to [open an issue](https://github.com/prasadkjose/OrganizeIt/issues). I am happy to review and address any problems.
 
 ## License
 

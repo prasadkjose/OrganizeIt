@@ -20,6 +20,7 @@ class InputArgParser:
         self.parser.add_argument(
             "-m",
             "--move",
+            action="store_true",
             help="--move: Move the files to the destination directory. This operation cannot be reverted.",
         )
 
