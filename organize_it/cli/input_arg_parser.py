@@ -7,35 +7,16 @@ from organize_it.cli.interactive_cli import InteractiveCLI
 class InputArgParser:
     """Command Line Input Arg Parser class to process CLI args used in the tool."""
 
-    def __init__(self, generate_source_tree, categorize_and_generate_dest_tree):
-        self.parser = argparse.ArgumentParser()
-        self.parser.add_argument(
-            "-s", "--src", help="--src: Path to the directory to organize."
-        )
-        self.parser.add_argument(
-            "-d",
-            "--dest",
-            help="--src: Path to the destination directory to move the organized files.",
-        )
-        self.parser.add_argument(
-            "-m",
-            "--move",
-            action="store_true",
-            help="--move: Move the files to the destination directory. This operation cannot be reverted.",
-        )
+    def __init__(
+        # the callback methods can be none if we are not interested in interactive CLI and also for testing this class.
+        self,
+        generate_source_tree=None,
+        categorize_and_generate_dest_tree=None,
+    ):
 
-        self.parser.add_argument(
-            "-i",
-            "--interactive",
-            help="--interactive: Use this flag to make the CLI tool interactive.",
-            action="store_true",
-        )
-
-        cli_args = self.parser.parse_args()
-
+        cli_args = self.parse_args()
         self._interactive = cli_args.interactive
-
-        if bool(self._interactive):
+        if bool(self.interactive):
             # Get the args from the interactive CLI
             args = self.interactive_cli(
                 generate_source_tree, categorize_and_generate_dest_tree
@@ -65,6 +46,52 @@ class InputArgParser:
     @property
     def interactive(self):
         return self._interactive
+
+    def parse_args(self) -> dict:
+        """
+        Parses command-line arguments and options using the configured argument parser.
+
+        This method processes the arguments passed to the CLI, validates them, and returns
+        the parsed arguments for further use.
+
+        Returns:
+            Namespace: A namespace object containing the parsed arguments as attributes.
+
+        Raises:
+            SystemExit: If invalid arguments are provided or required arguments are missing,
+                        the method may terminate the program with an error message.
+
+        Example:
+            args = parse_args()
+            # 'args' will contain the parsed command-line arguments
+        """
+
+        try:
+            parser = argparse.ArgumentParser()
+            parser.add_argument(
+                "-s", "--src", help="--src: Path to the directory to organize."
+            )
+            parser.add_argument(
+                "-d",
+                "--dest",
+                help="--src: Path to the destination directory to move the organized files.",
+            )
+            parser.add_argument(
+                "-m",
+                "--move",
+                action="store_true",
+                help="--move: Move the files to the destination directory. This operation cannot be reverted.",
+            )
+
+            parser.add_argument(
+                "-i",
+                "--interactive",
+                help="--interactive: Use this flag to make the CLI tool interactive.",
+                action="store_true",
+            )
+            return parser.parse_args()
+        except SystemExit as exception:
+            raise exception
 
     def interactive_cli(
         self, generate_source_tree, categorize_and_generate_dest_tree
