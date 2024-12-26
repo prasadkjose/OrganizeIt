@@ -21,24 +21,24 @@
         arg: config
 - input: 
     print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
-    arg: "src"
+    arg: "src" # Source path to be set.
 - input:
     print: "Enter your destination directory: (We'll create it for you if it doesn't exist. A tidy home awaits your files!)"
-    arg: "dest"
+    arg: "dest" # Destination path to be set.
 - input:
     print: "Here's the layout of your source directory: We'll map out the structure for you. (Press y to view it, or n to skip)"
     response: 
-        y: "view_tree"
+        y: "view_tree_source"
         n: "proceed"
 - "Organizing your files... Hold tight as OrganizeIt sorts everything into neat categories."
 - input:
     print: "Want to preview the result? Press Y to see how everything looks, or n to skip this step."
     response: 
-        y: "view_tree"
+        y: "view_tree_destination"
         n: "proceed"
 - input:
     print: "Looks good? Would you like to move (press m) or copy (press c) your files over to the destination?"
-    response: 
+    response: # Move arg to be set
         m: "set_arg"
         c: "set_arg"
 - input:

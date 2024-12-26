@@ -1,10 +1,13 @@
 """ Interactive CLI module for the project """
 
 import os
+from types import SimpleNamespace
 from organize_it.settings import (
     load_yaml,
     ROOT_DIR,
     exit_gracefully,
+    GENERATED_SOURCE_TREE,
+    GENERATED_DESTINATION_TREE,
 )
 
 INPUT_SCRIPT_PATH = os.path.join(ROOT_DIR, "cli")
@@ -28,7 +31,9 @@ class InteractiveCLI:
     def __init__(self):
         self.script_list = load_yaml(INPUT_SCRIPT_PATH)
 
-    def start_interactive_prompts(self) -> dict:
+    def start_interactive_prompts(
+        self, generate_source_tree, categorize_and_generate_dest_tree
+    ) -> dict:
         self.arg_dict = {}
         for prompt_item in self.script_list:
             if isinstance(prompt_item, str):
@@ -48,8 +53,14 @@ class InteractiveCLI:
                             # If it's an response based prompt, then call the appropriate response method from the 'response' key of the input prompt
                             if user_response in input_dict[RESPONSE]:
                                 response_method = input_dict[RESPONSE][user_response]
+                                # NS user response method arguments.
+                                response_fn_args_dict = SimpleNamespace(
+                                    user_response=user_response,
+                                    generate_source_tree=generate_source_tree,
+                                    categorize_and_generate_dest_tree=categorize_and_generate_dest_tree,
+                                )
                                 # Get the correct response method
-                                getattr(self, response_method)(user_response)
+                                getattr(self, response_method)(response_fn_args_dict)
                                 break
                             else:
                                 print("That was an incorrect input. Please try again.")
@@ -62,18 +73,46 @@ class InteractiveCLI:
         return self.arg_dict
 
     def help_me(self, _):
-        with open(os.path.join(INPUT_SCRIPT_PATH, "help.txt"), "r") as f:
+        with open(
+            os.path.join(INPUT_SCRIPT_PATH, "help.txt"), "r", encoding="utf-8"
+        ) as f:
             print(f.read())
         self.__continue_and_clear()
 
-    def set_arg(self, user_response):
-        arg = user_response in KEY_TO_ARG_DICT or None
+    def set_arg(self, args):
+        """
+        Sets a specific argument in the internal argument dictionary (`arg_dict`) based
+        on the user's response. The method checks if the user's response matches a key
+        in a predefined dictionary (`KEY_TO_ARG_DICT`) and, if so, updates the argument
+        dictionary accordingly.
+        """
+        arg = args.user_response in KEY_TO_ARG_DICT or None
         if arg is not None:
             self.arg_dict[arg] = True
         print("CLI args will be set based on the response")
 
-    def view_tree(self, _):
-        print("This is where the tree will be viewed")
+    def view_tree_source(self, args):
+        """This method calls :func:`organizeIt.__main__.process_source_and_generate_tree`"""
+        (
+            self.file_manager,
+            self.tree_structure,
+            self.source_tree_dict,
+        ) = args.generate_source_tree(self.arg_dict["src"], self.arg_dict["dest"])
+
+        with open(os.path.join(GENERATED_SOURCE_TREE), "r", encoding="utf-8") as f:
+            print(f.read())
+
+        self.__continue_and_clear()
+
+    def view_tree_destination(self, args):
+        """This method calls :func:`organizeIt.__main__.categorize_and_generate_dest_tree`"""
+        args.categorize_and_generate_dest_tree(
+            self.source_tree_dict, self.tree_structure
+        )
+        with open(os.path.join(GENERATED_DESTINATION_TREE), "r", encoding="utf-8") as f:
+            print(f.read())
+
+        self.__continue_and_clear()
 
     def proceed(self, _):
         print("")
