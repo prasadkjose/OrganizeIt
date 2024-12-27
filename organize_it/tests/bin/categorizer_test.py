@@ -35,7 +35,9 @@ class TestCategorizer:
     def test_filter_excluded_names(self):
         """Test Categorizer.filter_excluded_names with a list of sample names and exclusion list"""
         # Sample regex expressions to rest for
-        test_config = {"skip": {DIR: r"\bkeystore|.app$", FILES: r".xxl$|.pga$"}}
+        test_config = {
+            "rules": {"skip": {DIR: r"\bkeystore|.app$", FILES: r".xxl$|.pga$"}}
+        }
 
         sample_dir_names = [
             "Visual Studo Code.app",

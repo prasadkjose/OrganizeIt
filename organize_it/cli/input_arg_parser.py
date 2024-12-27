@@ -14,8 +14,10 @@ class InputArgParser:
         categorize_and_generate_dest_tree=None,
     ):
 
-        cli_args = self.parse_args()
-        self._interactive = cli_args.interactive
+        self._source_dir, self._dest_dir, self._move, self._interactive = (
+            self.parse_args()
+        )
+
         if bool(self.interactive):
             # Get the args from the interactive CLI
             args = self.interactive_cli(
@@ -24,10 +26,6 @@ class InputArgParser:
             self._source_dir, self._dest_dir, self._move = [
                 args.get(f) for f in ["src", "dest", "move"]
             ]
-        else:
-            self._source_dir = cli_args.src
-            self._dest_dir = cli_args.dest
-            self._move = cli_args.move
 
     # TODO: Refactor to programatically create getters and setters
 
@@ -89,7 +87,11 @@ class InputArgParser:
                 help="--interactive: Use this flag to make the CLI tool interactive.",
                 action="store_true",
             )
-            return parser.parse_args()
+            cli_args = parser.parse_args()
+            return [
+                vars(cli_args).get(f) for f in ["src", "dest", "move", "interactive"]
+            ]
+
         except SystemExit as exception:
             raise exception
 

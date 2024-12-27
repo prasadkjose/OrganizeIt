@@ -16,9 +16,7 @@ class TestInputArgParser:
             argparse.Namespace(
                 src="some/source", dest="some/dest", move=True, interactive=False
             ),
-            argparse.Namespace(
-                src="some/source1", dest="some/dest1", move=True, interactive=False
-            ),
+            argparse.Namespace(src="some/source1", dest="some/dest1"),
             argparse.Namespace(),
         ],
     )
@@ -41,10 +39,14 @@ class TestInputArgParser:
         assert (parser.src, parser.dest, parser.move, parser.interactive) == (
             "some/source1",
             "some/dest1",
-            True,
-            False,
+            None,
+            None,
         )
 
-        with pytest.raises(AttributeError):
-            parser = InputArgParser()
-            # This passes because attribute error is thrown
+        parser = InputArgParser()
+        assert (parser.src, parser.dest, parser.move, parser.interactive) == (
+            None,
+            None,
+            None,
+            None,
+        )

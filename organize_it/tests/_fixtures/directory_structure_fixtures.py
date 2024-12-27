@@ -17,10 +17,18 @@ directory_structure = {
                                 "subSubDir1.jpg",
                                 "subSubDir1.pdf",
                                 "subSubDir1.doc",
+                                "subSubDir1-image.jpg",
+                                "subSubDir1-project.doc",
                             ],
                         }
                     },
-                    FILES: ["subDir1.jpg", "subDir1.pdf", "subDir1.doc"],
+                    FILES: [
+                        "subDir1.jpg",
+                        "subDir1.pdf",
+                        "subDir1.doc",
+                        "subDir1-image.jpg",
+                        "subDir1-project.doc",
+                    ],
                 },
                 "subDir2": {
                     DIR: {
@@ -30,13 +38,27 @@ directory_structure = {
                                 "subSubDir2.jpg",
                                 "subSubDir2.pdf",
                                 "subSubDir2.doc",
+                                "subSubDir2-image.jpg",
+                                "subSubDir2-project.doc",
                             ],
                         }
                     },
-                    FILES: ["subDir2.jpg", "subDir2.pdf", "subDir2.doc"],
+                    FILES: [
+                        "subDir2.jpg",
+                        "subDir2.pdf",
+                        "subDir2.doc",
+                        "subDir2-image.jpg",
+                        "subDir2-project.doc",
+                    ],
                 },
             },
-            FILES: ["dir.jpg", "dir.pdf", "dir.doc"],
+            FILES: [
+                "dir.jpg",
+                "dir.pdf",
+                "dir.doc",
+                "dir-image.jpg",
+                "dir-project.doc",
+            ],
         }
     },
     FILES: [],
@@ -104,6 +126,8 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                         "subDir2/subSubDir2/subSubDir2.doc",
                         "subDir2/subSubDir2/subSubDir2.jpg",
                         "subDir2/subSubDir2/subSubDir2.pdf",
+                        "subDir1/subSubDir2/subSubDir2-image.jpg",
+                        "subDir1/subSubDir2/subSubDir2-project.doc",
                     ],
                 }
             },
@@ -111,6 +135,8 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                 "subDir2/subDir2.doc",
                 "subDir2/subDir2.jpg",
                 "subDir2/subDir2.pdf",
+                "subDir2/subDir2-image.jpg",
+                "subDir2/subDir2-project.doc",
             ],
         },
         "subDir1": {
@@ -121,6 +147,8 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                         "subDir1/subSubDir1/subSubDir1.doc",
                         "subDir1/subSubDir1/subSubDir1.jpg",
                         "subDir1/subSubDir1/subSubDir1.pdf",
+                        "subDir1/subSubDir1/subSubDir1-image.jpg",
+                        "subDir1/subSubDir1/subSubDir1-project.doc",
                     ],
                 }
             },
@@ -128,8 +156,16 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                 "subDir1/subDir1.doc",
                 "subDir1/subDir1.jpg",
                 "subDir1/subDir1.pdf",
+                "subDir1/subDir1-image.jpg",
+                "subDir1/subDir1-project.doc",
             ],
         },
     },
-    FILES: ["./dir.doc", "./dir.jpg", "./dir.pdf"],
+    FILES: [
+        "./dir.doc",
+        "./dir.jpg",
+        "./dir.pdf",
+        "./dir-image.jpg",
+        "./dir-project.doc",
+    ],
 }

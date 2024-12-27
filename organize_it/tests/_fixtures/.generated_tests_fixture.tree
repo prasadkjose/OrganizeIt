@@ -3,19 +3,29 @@
 │       │   ├── dir.jpg
 │       │   ├── dir.pdf
 │       │   ├── dir.doc
+│       │   ├── dir-image.jpg
+│       │   ├── dir-project.doc
 │       │   ├── subDir1/
 │       │       │   ├── subDir1.jpg
 │       │       │   ├── subDir1.pdf
 │       │       │   ├── subDir1.doc
+│       │       │   ├── subDir1-image.jpg
+│       │       │   ├── subDir1-project.doc
 │       │       │   ├── subSubDir1/
 │       │       │       │   ├── subSubDir1.jpg
 │       │       │       │   ├── subSubDir1.pdf
 │       │       │       │   ├── subSubDir1.doc
+│       │       │       │   ├── subSubDir1-image.jpg
+│       │       │       │   ├── subSubDir1-project.doc
 │       │   ├── subDir2/
 │       │       │   ├── subDir2.jpg
 │       │       │   ├── subDir2.pdf
 │       │       │   ├── subDir2.doc
+│       │       │   ├── subDir2-image.jpg
+│       │       │   ├── subDir2-project.doc
 │       │       │   ├── subSubDir2/
 │       │       │       │   ├── subSubDir2.jpg
 │       │       │       │   ├── subSubDir2.pdf
 │       │       │       │   ├── subSubDir2.doc
+│       │       │       │   ├── subSubDir2-image.jpg
+│       │       │       │   ├── subSubDir2-project.doc

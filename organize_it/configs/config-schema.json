@@ -9,23 +9,45 @@
         "destination": {
             "type": "string"
         },
-        "format": { "$ref": "#/$defs/format" },
-        "skip": {
+        "rules": {
             "type": "object",
-            "description": "File System objects to skip.",
+            "description": "Rule definitions",
             "properties": {
-                "dir": {
-                    "description": "Regex if matched, will skip the file matching the pattern.",
-                    "type": "string"
+                "format": { "$ref": "#/$defs/format" },
+                "name": {
+                    "type": "object",
+                    "description": "Organize by file or directory name (using a prefix or pattern. It takes precedence over format",
+                    "patternProperties": {
+                        "^[a-z0-9]+$": {
+                            "type": "object",
+                            "description": "Desitnation directory name within the global destination source",
+                            "properties": {
+                                "name_pattern": {
+                                    "description": "Regex if matched, will move/copy the files/dirs to the destination",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
                 },
-                "files": {
-                    "description": "Regex if matched, will skip the file matching the pattern.",
-                    "type": "string"
+                "skip": {
+                    "type": "object",
+                    "description": "File System objects to skip.",
+                    "properties": {
+                        "dir": {
+                            "description": "Regex if matched, will skip the file matching the pattern.",
+                            "type": "string"
+                        },
+                        "files": {
+                            "description": "Regex if matched, will skip the file matching the pattern.",
+                            "type": "string"
+                        }
+                    }
                 }
-            }
+            },
+            "required":[ "format" ] 
         }
     },
-    "required":[ "format" ],
     "additionalProperties": false,
     "$defs": {
          "format": {

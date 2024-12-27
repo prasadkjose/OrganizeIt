@@ -141,7 +141,7 @@ class FileManager:
             " - Performing File operation based on the organised tree structure."
         )
         # Iterate through the sorted dict top-down and do the cp command.
-        formats_in_config = list(config["format"].keys())
+        formats_in_config = list(config["rules"]["format"].keys())
 
         def perform(current_dir_contents):
             current_level_directories = current_dir_contents.keys()

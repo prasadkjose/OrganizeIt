@@ -3,7 +3,7 @@
 import logging
 import re
 
-from organize_it.settings import FILES, DIR, SKIP
+from organize_it.settings import FILES, DIR, SKIP, RULES
 
 LOGGER = logging.getLogger(__name__)
 
@@ -14,15 +14,15 @@ class Categorizer:
     def __init__(self, config):
         # create a cache of types mapped to format to quickly access them later.
         self.types_to_format_dict = {}
-        if "format" in config:
-            for cat, types in config["format"].items():
+        if "format" in config[RULES]:
+            for cat, types in config[RULES]["format"].items():
                 format_types = types["types"]
                 for format_type in format_types:
                     self.types_to_format_dict[format_type] = cat
 
         # Regex of dirs and file names to skip.
-        if SKIP in config:
-            skip_dict = config[SKIP]
+        if SKIP in config[RULES]:
+            skip_dict = config[RULES][SKIP]
             self.skip_dir_regex = skip_dict.get(DIR)
             self.skip_file_regex = skip_dict.get(FILES)
 
