@@ -53,3 +53,7 @@ class TestCategorizer:
 
         filtered_list = categorizer.filter_excluded_names(sample_file_names, False)
         assert filtered_list == ["no-regex-match.txt"]
+
+    def test___check_name_pattern(self):
+        """Test Categorizer.check_name_pattern with a list of sample names and name_pattern config"""
+        # TODO: write this test.

@@ -17,6 +17,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 RULES = "rules"
+NAMES = "names"
+FORMAT = "format"
 FILES = "files"
 DIR = "dir"
 SKIP = "skip"

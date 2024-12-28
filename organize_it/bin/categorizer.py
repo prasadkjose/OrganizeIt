@@ -3,7 +3,7 @@
 import logging
 import re
 
-from organize_it.settings import FILES, DIR, SKIP, RULES
+from organize_it.settings import FILES, DIR, SKIP, RULES, NAMES, FORMAT
 
 LOGGER = logging.getLogger(__name__)
 
@@ -12,10 +12,11 @@ class Categorizer:
     """Categorizer class that handles categorization logic based on file extensions"""
 
     def __init__(self, config):
+        self.name_rules_dict = config[RULES][NAMES]
         # create a cache of types mapped to format to quickly access them later.
         self.types_to_format_dict = {}
-        if "format" in config[RULES]:
-            for cat, types in config[RULES]["format"].items():
+        if FORMAT in config[RULES]:
+            for cat, types in config[RULES][FORMAT].items():
                 format_types = types["types"]
                 for format_type in format_types:
                     self.types_to_format_dict[format_type] = cat
@@ -43,6 +44,20 @@ class Categorizer:
             )
         else:
             return name_list
+
+    def check_name_pattern(self, file_name):
+        """Method to take in the file name and check if it matches any of the name pattern rules.
+
+        Returns:
+            The Directory name to create to last rule that matched.
+        """
+        matched_tupple_list = [
+            dir_name
+            for dir_name in self.name_rules_dict
+            if re.search(self.name_rules_dict["name_pattern"], file_name)
+        ]
+        LOGGER.debug("Found some file name matched here: %s", matched_tupple_list)
+        return matched_tupple_list[-1]  # The latest match is returned
 
     def categorize_dict(self, source_tree_dict: dict, recursive: bool) -> dict:
         """
@@ -73,7 +88,9 @@ class Categorizer:
             sorted_dict = {DIR: {}, FILES: []}
             current_level_files = self.filter_excluded_names(input_dict[FILES], False)
             for file_name in current_level_files:
-                # Check if last substring with . is in the cache and add the format as dir_name to the dict
+                # TODO: Create dirs for name regex which takes precedence over format check.
+                matched_dir_name = self.check_name_pattern(file_name)
+                # File format check: last substring with . is in the cache and add the format as dir_name to the dict
                 current_file_format = file_name.rsplit(".", 1)[1]
                 if current_file_format in self.types_to_format_dict:
                     current_dir_format_name = self.types_to_format_dict[
