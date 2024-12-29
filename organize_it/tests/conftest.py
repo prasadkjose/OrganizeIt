@@ -2,7 +2,7 @@
 
 import os
 import pytest
-from organize_it.tests._fixtures.generate_samples_utils import (
+from organize_it.tests.test_utils import (
     generate_samples_with_config,
 )
 from organize_it.settings import TEST_FIXTURES_DIR

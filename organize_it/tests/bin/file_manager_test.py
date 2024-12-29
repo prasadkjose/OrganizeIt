@@ -12,6 +12,7 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
     CATEGORIZED_DIR_DICTIONARY,
     UNCATEGORIZED_DIR_DICTIONARY,
 )
+from organize_it.tests.test_utils import dicts_are_equal
 
 from organize_it.settings import (
     TEST_FIXTURES_DIR,
@@ -42,7 +43,8 @@ class TestFileManager:
                 TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
             ),
         )
-        assert UNCATEGORIZED_DIR_DICTIONARY == tree_dict
+
+        assert dicts_are_equal(UNCATEGORIZED_DIR_DICTIONARY, tree_dict) is True
 
     def test_categorize_and_sort_file(self):
         """Test FileManager.categorize_and_sort_file method to sort files with sample generated directories and files."""
@@ -69,8 +71,21 @@ class TestFileManager:
                 FILES: ["document/dir.doc", "document/dir.pdf"],
             },
             "photo": {DIR: {}, FILES: ["photo/dir.jpg"]},
+            "photo_by_name": {FILES: ["photo_by_name/dir-image.jpg"], DIR: {}},
+            "project_by_name": {
+                FILES: ["project_by_name/dir-project.doc"],
+                DIR: {},
+            },
             "subDir1": {
                 DIR: {
+                    "photo_by_name": {
+                        FILES: ["subDir1/photo_by_name/subDir1-image.jpg"],
+                        DIR: {},
+                    },
+                    "project_by_name": {
+                        FILES: ["subDir1/project_by_name/subDir1-project.doc"],
+                        DIR: {},
+                    },
                     "document": {
                         DIR: {},
                         FILES: [
@@ -81,6 +96,18 @@ class TestFileManager:
                     "photo": {DIR: {}, FILES: ["subDir1/photo/subDir1.jpg"]},
                     "subSubDir1": {
                         DIR: {
+                            "photo_by_name": {
+                                FILES: [
+                                    "subDir1/subSubDir1/photo_by_name/subSubDir1-image.jpg"
+                                ],
+                                DIR: {},
+                            },
+                            "project_by_name": {
+                                FILES: [
+                                    "subDir1/subSubDir1/project_by_name/subSubDir1-project.doc"
+                                ],
+                                DIR: {},
+                            },
                             "photo": {
                                 DIR: {},
                                 FILES: ["subDir1/subSubDir1/photo/subSubDir1.jpg"],
@@ -100,6 +127,14 @@ class TestFileManager:
             },
             "subDir2": {
                 DIR: {
+                    "photo_by_name": {
+                        FILES: ["subDir2/photo_by_name/subDir2-image.jpg"],
+                        DIR: {},
+                    },
+                    "project_by_name": {
+                        FILES: ["subDir2/project_by_name/subDir2-project.doc"],
+                        DIR: {},
+                    },
                     "document": {
                         DIR: {},
                         FILES: [
@@ -110,6 +145,18 @@ class TestFileManager:
                     "photo": {DIR: {}, FILES: ["subDir2/photo/subDir2.jpg"]},
                     "subSubDir2": {
                         DIR: {
+                            "photo_by_name": {
+                                FILES: [
+                                    "subDir2/subSubDir2/photo_by_name/subSubDir2-image.jpg"
+                                ],
+                                DIR: {},
+                            },
+                            "project_by_name": {
+                                FILES: [
+                                    "subDir2/subSubDir2/project_by_name/subSubDir2-project.doc"
+                                ],
+                                DIR: {},
+                            },
                             "document": {
                                 DIR: {},
                                 FILES: [
@@ -128,4 +175,5 @@ class TestFileManager:
                 FILES: [],
             },
         }
-        assert fixture == tree_dict[DIR]
+
+        assert dicts_are_equal(fixture, tree_dict[DIR]) is True

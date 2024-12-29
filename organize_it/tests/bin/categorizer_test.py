@@ -11,6 +11,7 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
     UNCATEGORIZED_DIR_DICTIONARY,
     CATEGORIZED_DIR_DICTIONARY,
 )
+from organize_it.tests.test_utils import dicts_are_equal
 
 
 @pytest.mark.usefixtures("test_setup")
@@ -32,7 +33,10 @@ class TestCategorizer:
         oit_tree_dict_recursive = categorizer.categorize_dict(
             UNCATEGORIZED_DIR_DICTIONARY, True
         )
-        assert oit_tree_dict_recursive[DIR] == CATEGORIZED_DIR_DICTIONARY
+        assert (
+            dicts_are_equal(CATEGORIZED_DIR_DICTIONARY, oit_tree_dict_recursive[DIR])
+            is True
+        )
 
     def test_filter_excluded_names(self):
         """Test Categorizer.filter_excluded_names with a list of sample names and exclusion list"""
