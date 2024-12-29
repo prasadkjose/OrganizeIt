@@ -1,3 +1,5 @@
+""" Fixtures """
+
 from organize_it.settings import FILES, DIR
 
 GENERATED_ROOT_DIR_NAME = "generated_files"
@@ -66,6 +68,8 @@ directory_structure = {
 
 # Categorized and sorted file structure with relative source path of the files.
 CATEGORIZED_DIR_DICTIONARY = {
+    "photo_by_name": {FILES: ["./dir-image.jpg"], DIR: {}},
+    "project_by_name": {FILES: ["./dir-project.doc"], DIR: {}},
     "photo": {FILES: ["./dir.jpg"], DIR: {}},
     "document": {FILES: ["./dir.doc", "./dir.pdf"], DIR: {}},
     "subDir1": {
@@ -76,6 +80,8 @@ CATEGORIZED_DIR_DICTIONARY = {
                 FILES: ["subDir1/subDir1.doc", "subDir1/subDir1.pdf"],
                 DIR: {},
             },
+            "photo_by_name": {FILES: ["subDir1/subDir1-image.jpg"], DIR: {}},
+            "project_by_name": {FILES: ["subDir1/subDir1-project.doc"], DIR: {}},
             "subSubDir1": {
                 FILES: [],
                 DIR: {
@@ -85,6 +91,14 @@ CATEGORIZED_DIR_DICTIONARY = {
                             "subDir1/subSubDir1/subSubDir1.doc",
                             "subDir1/subSubDir1/subSubDir1.pdf",
                         ],
+                        DIR: {},
+                    },
+                    "photo_by_name": {
+                        FILES: ["subDir1/subSubDir1/subSubDir1-image.jpg"],
+                        DIR: {},
+                    },
+                    "project_by_name": {
+                        FILES: ["subDir1/subSubDir1/subSubDir1-project.doc"],
                         DIR: {},
                     },
                 },
@@ -99,6 +113,14 @@ CATEGORIZED_DIR_DICTIONARY = {
                 FILES: ["subDir2/subDir2.doc", "subDir2/subDir2.pdf"],
                 DIR: {},
             },
+            "photo_by_name": {
+                FILES: ["subDir2/subDir2-image.jpg"],
+                DIR: {},
+            },
+            "project_by_name": {
+                FILES: ["subDir2/subDir2-project.doc"],
+                DIR: {},
+            },
             "subSubDir2": {
                 FILES: [],
                 DIR: {
@@ -108,6 +130,14 @@ CATEGORIZED_DIR_DICTIONARY = {
                             "subDir2/subSubDir2/subSubDir2.doc",
                             "subDir2/subSubDir2/subSubDir2.pdf",
                         ],
+                        DIR: {},
+                    },
+                    "photo_by_name": {
+                        FILES: ["subDir2/subSubDir2/subSubDir2-image.jpg"],
+                        DIR: {},
+                    },
+                    "project_by_name": {
+                        FILES: ["subDir2/subSubDir2/subSubDir2-project.doc"],
                         DIR: {},
                     },
                 },
@@ -123,20 +153,20 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                 "subSubDir2": {
                     DIR: {},
                     FILES: [
-                        "subDir2/subSubDir2/subSubDir2.doc",
                         "subDir2/subSubDir2/subSubDir2.jpg",
                         "subDir2/subSubDir2/subSubDir2.pdf",
-                        "subDir1/subSubDir2/subSubDir2-image.jpg",
-                        "subDir1/subSubDir2/subSubDir2-project.doc",
+                        "subDir2/subSubDir2/subSubDir2-image.jpg",
+                        "subDir2/subSubDir2/subSubDir2-project.doc",
+                        "subDir2/subSubDir2/subSubDir2.doc",
                     ],
                 }
             },
             FILES: [
+                "subDir2/subDir2-image.jpg",
+                "subDir2/subDir2-project.doc",
                 "subDir2/subDir2.doc",
                 "subDir2/subDir2.jpg",
                 "subDir2/subDir2.pdf",
-                "subDir2/subDir2-image.jpg",
-                "subDir2/subDir2-project.doc",
             ],
         },
         "subDir1": {
@@ -144,28 +174,28 @@ UNCATEGORIZED_DIR_DICTIONARY = {
                 "subSubDir1": {
                     DIR: {},
                     FILES: [
+                        "subDir1/subSubDir1/subSubDir1-image.jpg",
+                        "subDir1/subSubDir1/subSubDir1-project.doc",
                         "subDir1/subSubDir1/subSubDir1.doc",
                         "subDir1/subSubDir1/subSubDir1.jpg",
                         "subDir1/subSubDir1/subSubDir1.pdf",
-                        "subDir1/subSubDir1/subSubDir1-image.jpg",
-                        "subDir1/subSubDir1/subSubDir1-project.doc",
                     ],
                 }
             },
             FILES: [
+                "subDir1/subDir1-image.jpg",
+                "subDir1/subDir1-project.doc",
                 "subDir1/subDir1.doc",
                 "subDir1/subDir1.jpg",
                 "subDir1/subDir1.pdf",
-                "subDir1/subDir1-image.jpg",
-                "subDir1/subDir1-project.doc",
             ],
         },
     },
     FILES: [
+        "./dir-image.jpg",
+        "./dir-project.doc",
         "./dir.doc",
         "./dir.jpg",
         "./dir.pdf",
-        "./dir-image.jpg",
-        "./dir-project.doc",
     ],
 }

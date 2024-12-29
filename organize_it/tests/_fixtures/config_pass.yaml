@@ -14,6 +14,6 @@ rules:
     dir: r"app$|application$"
   names:
     photo_by_name:
-      name_pattern: r"\bimage|pic$"
+      name_pattern: "image|pic$"
     project_by_name:
-      name_pattern: "^project_.*"  # Regular expression to match filenames or directory names starting with 'project_'
+      name_pattern: "project"  # Regular expression to match filenames or directory names starting with 'project_'

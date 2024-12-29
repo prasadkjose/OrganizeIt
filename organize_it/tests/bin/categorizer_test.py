@@ -25,6 +25,8 @@ class TestCategorizer:
         assert oit_tree_dict[DIR] == {
             "photo": {FILES: ["./dir.jpg"], DIR: {}},
             "document": {FILES: ["./dir.doc", "./dir.pdf"], DIR: {}},
+            "photo_by_name": {FILES: ["./dir-image.jpg"], DIR: {}},
+            "project_by_name": {FILES: ["./dir-project.doc"], DIR: {}},
         }
 
         oit_tree_dict_recursive = categorizer.categorize_dict(

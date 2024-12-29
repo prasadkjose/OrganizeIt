@@ -12,7 +12,9 @@ class Categorizer:
     """Categorizer class that handles categorization logic based on file extensions"""
 
     def __init__(self, config):
-        self.name_rules_dict = config[RULES][NAMES]
+        if NAMES in config[RULES]:
+            self.name_rules_dict = config[RULES][NAMES]
+
         # create a cache of types mapped to format to quickly access them later.
         self.types_to_format_dict = {}
         if FORMAT in config[RULES]:
@@ -51,13 +53,18 @@ class Categorizer:
         Returns:
             The Directory name to create to last rule that matched.
         """
-        matched_tupple_list = [
-            dir_name
-            for dir_name in self.name_rules_dict
-            if re.search(self.name_rules_dict["name_pattern"], file_name)
-        ]
-        LOGGER.debug("Found some file name matched here: %s", matched_tupple_list)
-        return matched_tupple_list[-1]  # The latest match is returned
+        if hasattr(self, "name_rules_dict"):
+            matched_tupple_list = [
+                dir_name
+                for dir_name in self.name_rules_dict
+                if re.search(self.name_rules_dict[dir_name]["name_pattern"], file_name)
+            ]
+            LOGGER.debug("Found some file name matched here: %s", matched_tupple_list)
+            return (
+                matched_tupple_list[-1] if len(matched_tupple_list) else None
+            )  # The latest match is returned
+        else:
+            return None
 
     def categorize_dict(self, source_tree_dict: dict, recursive: bool) -> dict:
         """
@@ -89,22 +96,33 @@ class Categorizer:
             current_level_files = self.filter_excluded_names(input_dict[FILES], False)
             for file_name in current_level_files:
                 # TODO: Create dirs for name regex which takes precedence over format check.
-                matched_dir_name = self.check_name_pattern(file_name)
-                # File format check: last substring with . is in the cache and add the format as dir_name to the dict
-                current_file_format = file_name.rsplit(".", 1)[1]
-                if current_file_format in self.types_to_format_dict:
-                    current_dir_format_name = self.types_to_format_dict[
-                        current_file_format
-                    ]
-                    if current_dir_format_name in sorted_dict[DIR]:
-                        sorted_dict[DIR][current_dir_format_name][FILES].append(
-                            file_name
-                        )
+                matched_dir_name = self.check_name_pattern(
+                    file_name
+                )  # Dir name to be created for matched files.
+                if matched_dir_name:
+                    if matched_dir_name in sorted_dict[DIR]:
+                        sorted_dict[DIR][matched_dir_name][FILES].append(file_name)
                     else:
-                        sorted_dict[DIR][current_dir_format_name] = {
+                        sorted_dict[DIR][matched_dir_name] = {
                             DIR: {},
                             FILES: [file_name],
                         }
+                else:
+                    # File format check: last substring with . is in the cache and add the format as dir_name to the dict
+                    current_file_format = file_name.rsplit(".", 1)[1]
+                    if current_file_format in self.types_to_format_dict:
+                        current_dir_format_name = self.types_to_format_dict[
+                            current_file_format
+                        ]
+                        if current_dir_format_name in sorted_dict[DIR]:
+                            sorted_dict[DIR][current_dir_format_name][FILES].append(
+                                file_name
+                            )
+                        else:
+                            sorted_dict[DIR][current_dir_format_name] = {
+                                DIR: {},
+                                FILES: [file_name],
+                            }
 
             if recursive:
                 # Go into each sub dir of source_tree_dict and categorize recursively.
