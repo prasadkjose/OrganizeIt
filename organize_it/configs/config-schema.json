@@ -11,46 +11,58 @@
         },
         "rules": {
             "type": "object",
-            "description": "Rule definitions",
+            "description": "Rule definitions. Atleast one of them must be provided. Prefereably format or name.",
             "properties": {
-                "format": { "$ref": "#/$defs/format" },
-                "name": {
-                    "type": "object",
-                    "description": "Organize by file or directory name (using a prefix or pattern. It takes precedence over format",
-                    "patternProperties": {
-                        "^[a-z0-9]+$": {
+                "anyOf": [
+                    {
+                        "format": {
+                            "$ref": "#/$defs/format"
+                        }
+                    },
+                    {
+                        "name": {
                             "type": "object",
-                            "description": "Desitnation directory name within the global destination source",
+                            "description": "Organize by file or directory name (using a prefix or pattern. It takes precedence over format",
+                            "patternProperties": {
+                                "^[a-z0-9]+$": {
+                                    "type": "object",
+                                    "description": "Desitnation directory name within the global destination source",
+                                    "properties": {
+                                        "name_pattern": {
+                                            "description": "Regex if matched, will move/copy the files/dirs to the destination",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "skip": {
+                            "type": "object",
+                            "description": "File System objects to skip.",
                             "properties": {
-                                "name_pattern": {
-                                    "description": "Regex if matched, will move/copy the files/dirs to the destination",
+                                "dir": {
+                                    "description": "Regex if matched, will skip the file matching the pattern.",
+                                    "type": "string"
+                                },
+                                "files": {
+                                    "description": "Regex if matched, will skip the file matching the pattern.",
                                     "type": "string"
                                 }
                             }
                         }
                     }
-                },
-                "skip": {
-                    "type": "object",
-                    "description": "File System objects to skip.",
-                    "properties": {
-                        "dir": {
-                            "description": "Regex if matched, will skip the file matching the pattern.",
-                            "type": "string"
-                        },
-                        "files": {
-                            "description": "Regex if matched, will skip the file matching the pattern.",
-                            "type": "string"
-                        }
-                    }
-                }
+                ]
             },
-            "required":[ "format" ] 
+            "required": [
+                "format"
+            ]
         }
     },
     "additionalProperties": false,
     "$defs": {
-         "format": {
+        "format": {
             "type": "object",
             "patternProperties": {
                 "^[a-z0-9]+$": {
@@ -59,7 +71,9 @@
                         "types": {
                             "type": "array"
                         },
-                        "format": { "$ref": "#/$defs/format" }
+                        "format": {
+                            "$ref": "#/$defs/format"
+                        }
                     }
                 }
             }
