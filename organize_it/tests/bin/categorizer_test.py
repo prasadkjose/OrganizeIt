@@ -60,6 +60,24 @@ class TestCategorizer:
         filtered_list = categorizer.filter_excluded_names(sample_file_names, False)
         assert filtered_list == ["no-regex-match.txt"]
 
-    def test___check_name_pattern(self):
+    def test_check_name_pattern(self):
         """Test Categorizer.check_name_pattern with a list of sample names and name_pattern config"""
-        # TODO: write this test.
+
+        test_config = {
+            "rules": {
+                "names": {
+                    "dir1": {"name_pattern": "^dir1"},  # start with dir1
+                    "proj": {"name_pattern": "proj*"},  # end with proj before extension
+                }
+            }
+        }
+        sample_file_names = [
+            ("no_match_at_all.cx", None),
+            ("dir1_somefile.as", "dir1"),
+            ("dir1_somefile.proj", "proj"),  # the last defined rule will be matched
+        ]
+        categorizer = Categorizer(test_config)
+
+        for name, d in sample_file_names:
+            matched_dir = categorizer.check_name_pattern(name)
+            assert matched_dir == d
