@@ -5,7 +5,7 @@
 ## Features
 
 - Automatically organizes files into categorized subdirectories (e.g., Images, Documents, Music, etc.).
-- Supports custom categorization rules based on file extensions.
+- Supports custom categorization rules based on file extensions and file name patterns.
 - Option to organize files into a hierarchical tree structure for easy navigation.
 - Simple, easy-to-use command-line interface.
 - Supports recursive file handling for organizing files in nested directories.
@@ -108,7 +108,7 @@ organizeIt/
 ├── bin/                    # Utility class implementations
     ├── file_manager.py     # Handles file manipulation (move, rename, etc.)
     ├── tree_structure.py   # Generates and manages tree structure representation   
-    └── categorizer.py      # Handles categorization logic based on file extensions
+    └── categorizer.py      # Handles categorization logic based on file extensions and name patterns.
 ├── cli/
     ├── input_arg_parser    # CLI arguments parser module.
     ├── interactive_cli     # Module for Interactice mode use inputs

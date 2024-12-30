@@ -28,8 +28,8 @@ NUMBER_OF_ATTEMPTS = 5
 class InteractiveCLI:
     """Interactive CLI module to handle input from user"""
 
-    def __init__(self):
-        self.script_list = load_yaml(INPUT_SCRIPT_PATH)
+    def __init__(self, script_path: str = INPUT_SCRIPT_PATH):
+        self.script_list = load_yaml(script_path)
 
     def start_interactive_prompts(
         self, generate_source_tree, categorize_and_generate_dest_tree

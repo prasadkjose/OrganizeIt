@@ -22,14 +22,14 @@
                     {
                         "name": {
                             "type": "object",
-                            "description": "Organize by file or directory name (using a prefix or pattern. It takes precedence over format",
+                            "description": "Organize by file name (using a prefix or pattern. It takes precedence over format",
                             "patternProperties": {
                                 "^[a-z0-9]+$": {
                                     "type": "object",
                                     "description": "Desitnation directory name within the global destination source",
                                     "properties": {
                                         "name_pattern": {
-                                            "description": "Regex if matched, will move/copy the files/dirs to the destination",
+                                            "description": "Regex if matched, will move/copy the files to the destination",
                                             "type": "string"
                                         }
                                     }

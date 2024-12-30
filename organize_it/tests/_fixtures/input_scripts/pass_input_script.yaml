@@ -1,0 +1,11 @@
+- "Non-response Prompt 1"
+- input:
+    print: "Interactive Prompt 1"
+    response: 
+        y: "proceed"
+- "Non-response Prompt 2"
+- input:
+    print: "Interactive Prompt 2"
+    response: 
+        y: "proceed"
+
