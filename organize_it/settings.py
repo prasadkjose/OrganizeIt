@@ -6,6 +6,7 @@ from pathlib import Path
 import logging
 import json
 import yaml
+import constants
 
 # setup configuration for logging
 logging.basicConfig(
@@ -101,3 +102,17 @@ def exit_gracefully():
         "Exiting OrganizeIt due to an error. Please check the verbose logs for more information."
     )
     sys.exit(1)
+
+
+def get_constant(name):
+    """
+    Retrieve the value of a constant from the constants module.
+
+    :param name: The name of the constant to retrieve.
+    :return: The value of the constant.
+    :raises AttributeError: If the constant is not defined in constants.py.
+    """
+    try:
+        return getattr(constants, name)
+    except AttributeError as e:
+        raise AttributeError(f"Constant '{name}' not found in constants.py") from e

@@ -67,3 +67,6 @@ organize_it/tests/_fixtures/generated_files/
 
 # generated temporary files 
 organize_it/.tmp
+
+# API/Tokens
+constants.py
