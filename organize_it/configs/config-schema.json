@@ -70,9 +70,6 @@
                     "properties": {
                         "types": {
                             "type": "array"
-                        },
-                        "format": {
-                            "$ref": "#/$defs/format"
                         }
                     }
                 }

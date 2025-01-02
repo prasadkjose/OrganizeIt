@@ -35,6 +35,9 @@ CONFIG_DIR = os.path.join(ROOT_DIR, "configs")
 # The path to the test fixtures configs directory
 TEST_FIXTURES_DIR = os.path.join(ROOT_DIR, "tests/_fixtures")
 
+# The path to the AI directory
+AI_DIR = os.path.join(ROOT_DIR, "ai")
+
 # .tmp file path for any temporary files
 TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
 os.makedirs(TMP_DIR, exist_ok=True)

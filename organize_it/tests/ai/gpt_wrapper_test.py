@@ -7,6 +7,6 @@ class TestGPTWrapper:
     def test_gpt_wrapper(self):
         print("start")
         wrapper = GPTWrapper()
+        wrapper.init_open_ai()
         prompt = "Give me a fact about the earth in less than 20 words"
-        response = wrapper.generate_single_line_response(prompt)
         pass

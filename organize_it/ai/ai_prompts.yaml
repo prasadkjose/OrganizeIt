@@ -1,5 +1,5 @@
 system: >
-  I have a JSON schema that defines rules for organizing files based on their format, name patterns, or skip conditions. 
+  Here is a JSON schema that defines rules for organizing files based on their format, name patterns, or skip conditions. 
   The schema includes properties for source and destination directories, format rules (acceptable file types grouped under 
   directory names), name patterns (regex to match file names and organize them into directories),
   and skip rules (regex to exclude certain files or directories).
@@ -32,3 +32,7 @@ system: >
       projects:
         name_pattern: "project"
   Now, using the above schema and a new array of file paths, provide a YAML configuration to organize the files appropriately."
+
+user:
+  - "Can you try again, Please"
+  - "Please make sure the YAML config would adhre to the json schema provided."
