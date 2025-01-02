@@ -15,10 +15,10 @@
     response: 
         y: "proceed_down"
         n: "proceed"
-    # TODO: take config file as arg
-    input: 
-        print: "Enter your configuration file Path"
-        arg: config
+    proceed_down:
+        - input: 
+            print: "Enter your configuration file Path"
+            arg: config
 - input: 
     print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
     arg: "src" # Source path to be set.

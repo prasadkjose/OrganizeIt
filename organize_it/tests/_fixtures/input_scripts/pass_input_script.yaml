@@ -8,4 +8,12 @@
     print: "Interactive Prompt 2"
     response: 
         y: "proceed"
-
+- input: 
+    print: "This input will set the 'arg1' arg"
+    arg: "arg1"
+- input: 
+    print: "This input will set the 'arg2' arg"
+    arg: "arg2"
+- input: 
+    print: "This input will set the 'arg3' arg"
+    arg: "arg3"

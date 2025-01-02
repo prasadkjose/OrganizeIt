@@ -42,6 +42,8 @@ AI_DIR = os.path.join(ROOT_DIR, "ai")
 TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
 os.makedirs(TMP_DIR, exist_ok=True)
 
+AI_GENERATED_DESTINATION_TREE = f"{TMP_DIR}/.ai-generated_destination.tree"
+AI_GENERATED_DESTINATION_JSON = f"{TMP_DIR}/.ai-generated_destination.json"
 GENERATED_DESTINATION_TREE = f"{TMP_DIR}/.generated_destination.tree"
 GENERATED_DESTINATION_JSON = f"{TMP_DIR}/.generated_destination.json"
 GENERATED_SOURCE_TREE = f"{TMP_DIR}/.generated.tree"

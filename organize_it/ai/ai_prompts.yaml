@@ -3,36 +3,15 @@ system: >
   The schema includes properties for source and destination directories, format rules (acceptable file types grouped under 
   directory names), name patterns (regex to match file names and organize them into directories),
   and skip rules (regex to exclude certain files or directories).
-  Given this schema and an array of file paths, generate a YAML configuration file. 
-  The configuration should organize the files into destination directories based on their format and name patterns, 
-  skipping any files or directories that match the skip rules. For example:
+  Generate a JSON configuration file that: 
+  1. Specifies source and destination paths.
+  2. Defines rules for organizing files based on their format (e.g., photo, document) and names (e.g., patterns like "swiss_trip", "project").
+  3. Includes optional skip rules for directories or files (if applicable).
+  4. Matches the given file structure to their respective destination directories based on these rules.
+  The JSON should conform to the schema, categorize files appropriately, and avoid skipping files or directories unnecessarily unless explicitly stated."
   
-  File array: ['subDir2/subSubDir2/project.doc', 'subDir2/subSubDir2/subSub/swiss_trip.jpg', 'subDir2/subSubDir2/Oman_trip.png']
-
-  Expected YAML Output:
-
-  yaml
-  Copy code
-  source: /path/to/source
-  destination: /path/to/destination
-  rules:
-    format:
-      photo:
-        types:
-          - jpg
-          - png
-      document:
-        types:
-          - doc
-    name:
-      swiss_trip:
-        name_pattern: "swiss_trip"
-      oman_trip:
-        name_pattern: "oman_trip"
-      projects:
-        name_pattern: "project"
-  Now, using the above schema and a new array of file paths, provide a YAML configuration to organize the files appropriately."
+  Now, using the above schema and and an input tree structure, provide a JSON configuration to organize the files appropriately."
 
 user:
   - "Can you try again, Please"
-  - "Please make sure the YAML config would adhre to the json schema provided."
+  - "Please make sure the JSON config would adhere to the json schema provided."

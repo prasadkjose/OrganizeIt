@@ -17,6 +17,7 @@ from organize_it.settings import (
     GENERATED_SOURCE_TREE,
     GENERATED_SOURCE_JSON,
     TEST_FIXTURES_DIR,
+    load_yaml,
 )
 
 from organize_it.cli.input_arg_parser import InputArgParser
@@ -82,13 +83,14 @@ def process_source_and_generate_tree(source_directory, destination_directory):
     return file_manager, tree_structure, source_tree_dict
 
 
-def categorize_and_generate_dest_tree(source_tree_dict, tree_structure):
+def categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure):
     """
     Categorizes files and directories paths from the source tree dictionary based on a
     given configuration, and then generates and writes the categorized tree structure
     to the destination directory.
 
     Parameters:
+        config (dict): The config dict.
         source_tree_dict (dict): A dictionary representing the hierarchical structure
                                   of files in the source directory, typically generated
                                   from a previous file walk.
@@ -101,13 +103,11 @@ def categorize_and_generate_dest_tree(source_tree_dict, tree_structure):
               directories are organized according to the given configuration.
 
     Example:
-        categorized_tree_dict = categorize_and_generate_dest_tree(source_tree_dict, tree_structure)
+        categorized_tree_dict = categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure)
     """
 
     # Categorize the files and dirs based on the given config
-    categorizer = Categorizer(
-        CONFIG
-    )  # TODO: this config file path can be provided in interactiv mode too.
+    categorizer = Categorizer(config)
     categorized_tree_dict = categorizer.categorize_dict(source_tree_dict, True)
 
     FileManager.create_and_write_file(
@@ -133,10 +133,6 @@ def main():
     """
     logger.info(" - Starting to organize...")
 
-    # Validate the YAML config first with the corresponding json-schema
-    schema_validator = YAMLConfigValidator(CONFIG)
-    schema_validator.validate_config()
-
     # Take Source and destination as CLI args.
     # Order of preference
     #   1. CLI --src
@@ -145,11 +141,19 @@ def main():
     cli_parser = InputArgParser(
         process_source_and_generate_tree, categorize_and_generate_dest_tree
     )
+    if hasattr(cli_parser, "config"):
+        config = load_yaml(cli_parser.config)
+    else:
+        config = "ssss "
 
     if cli_parser.move:
         move_files = cli_parser.move
     else:
         move_files = False
+
+    # Validate the YAML config first with the corresponding json-schema
+    schema_validator = YAMLConfigValidator(config)
+    schema_validator.validate_config()
 
     if cli_parser.src:
         source_directory = cli_parser.src
@@ -179,11 +183,11 @@ def main():
     )
 
     categorized_tree_dict = categorize_and_generate_dest_tree(
-        source_tree_dict, tree_structure
+        config, source_tree_dict, tree_structure
     )
 
     file_manager.categorize_and_sort_file(
-        CONFIG,
+        config,
         categorized_tree_dict[DIR],
         move_files,  # To delete the source files.
     )

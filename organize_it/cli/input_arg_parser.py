@@ -23,8 +23,8 @@ class InputArgParser:
             args = self.interactive_cli(
                 generate_source_tree, categorize_and_generate_dest_tree
             )
-            self._source_dir, self._dest_dir, self._move = [
-                args.get(f) for f in ["src", "dest", "move"]
+            self._source_dir, self._dest_dir, self._move, self._config = [
+                args.get(f) for f in ["src", "dest", "move", "config"]
             ]
 
     # TODO: Refactor to programatically create getters and setters
@@ -44,6 +44,10 @@ class InputArgParser:
     @property
     def interactive(self):
         return self._interactive
+
+    @property
+    def config(self):
+        return self._config
 
     def parse_args(self) -> dict:
         """
@@ -80,6 +84,11 @@ class InputArgParser:
                 action="store_true",
                 help="--move: Move the files to the destination directory. This operation cannot be reverted.",
             )
+            parser.add_argument(
+                "-c",
+                "--config",
+                help="--src: Path to the YAML/JSON config file with all the necessary rules and settings.",
+            )
 
             parser.add_argument(
                 "-i",
@@ -98,8 +107,8 @@ class InputArgParser:
     def interactive_cli(
         self, generate_source_tree, categorize_and_generate_dest_tree
     ) -> dict:
-        interactive_cli = InteractiveCLI()
-        arg_dict = interactive_cli.start_interactive_prompts(
+        interactive_cli = InteractiveCLI(
             generate_source_tree, categorize_and_generate_dest_tree
         )
+        arg_dict = interactive_cli.start_interactive_prompts()
         return arg_dict

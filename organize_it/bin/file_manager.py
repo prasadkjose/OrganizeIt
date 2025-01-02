@@ -107,8 +107,12 @@ class FileManager:
                         }
         if file_path:
             LOGGER.info(" - Saving file structure to %s", os.path.basename(file_path))
-            with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(file_dict, f, ensure_ascii=False)
+            FileManager.create_and_write_file(
+                file_path,
+                lambda file_stream: json.dump(
+                    file_dict, file_stream, ensure_ascii=False, indent=4
+                ),
+            )
 
         return file_dict
 

@@ -23,7 +23,9 @@ class TestTreeStructure:
 
         # Compare generated tree structure in .tmp file to fixture.
         with open(
-            f"{TEST_FIXTURES_DIR}/{GENERATED_ROOT_DIR_NAME}/.generated_tests.tree", "w"
+            f"{TEST_FIXTURES_DIR}/{GENERATED_ROOT_DIR_NAME}/.generated_tests.tree",
+            "w",
+            encoding="utf-8",
         ) as generated_tree_file:
             tree_structure.generate_tree_structure(
                 directory_structure, "", generated_tree_file

@@ -16,6 +16,7 @@ INPUT = "input"
 PRINT = "print"
 ARG = "arg"
 RESPONSE = "response"
+PROCEED_DOWN = "proceed_down"
 
 KEY_TO_ARG_DICT = {"m": "move"}
 
@@ -28,14 +29,20 @@ NUMBER_OF_ATTEMPTS = 5
 class InteractiveCLI:
     """Interactive CLI module to handle input from user"""
 
-    def __init__(self, script_path: str = INPUT_SCRIPT_PATH):
+    def __init__(
+        self,
+        generate_source_tree,
+        categorize_and_generate_dest_tree,
+        script_path: str = INPUT_SCRIPT_PATH,
+    ):
         self.script_list = load_yaml(script_path)
+        self.generate_source_tree = generate_source_tree
+        self.categorize_and_generate_dest_tree = categorize_and_generate_dest_tree
 
-    def start_interactive_prompts(
-        self, generate_source_tree, categorize_and_generate_dest_tree
-    ) -> dict:
+    def start_interactive_prompts(self, script_list: list = None) -> dict:
+        curr_script_list = self.script_list if not script_list else script_list
         self.arg_dict = {}
-        for prompt_item in self.script_list:
+        for prompt_item in curr_script_list:
             if isinstance(prompt_item, str):
                 #  if list item is string, then print it.
                 print(prompt_item)
@@ -56,8 +63,7 @@ class InteractiveCLI:
                                 # NS user response method arguments.
                                 response_fn_args_dict = SimpleNamespace(
                                     user_response=user_response,
-                                    generate_source_tree=generate_source_tree,
-                                    categorize_and_generate_dest_tree=categorize_and_generate_dest_tree,
+                                    input_dict=input_dict,
                                 )
                                 # Get the correct response method
                                 getattr(self, response_method)(response_fn_args_dict)
@@ -91,23 +97,25 @@ class InteractiveCLI:
             self.arg_dict[arg] = True
         print("CLI args will be set based on the response")
 
-    def view_tree_source(self, args):
+    def view_tree_source(self, _):
         """This method calls :func:`organizeIt.__main__.process_source_and_generate_tree`"""
         (
             self.file_manager,
             self.tree_structure,
             self.source_tree_dict,
-        ) = args.generate_source_tree(self.arg_dict["src"], self.arg_dict["dest"])
+        ) = self.generate_source_tree(self.arg_dict["src"], self.arg_dict["dest"])
 
         with open(os.path.join(GENERATED_SOURCE_TREE), "r", encoding="utf-8") as f:
             print(f.read())
 
         self.__continue_and_clear()
 
-    def view_tree_destination(self, args):
+    def view_tree_destination(self, _):
         """This method calls :func:`organizeIt.__main__.categorize_and_generate_dest_tree`"""
-        args.categorize_and_generate_dest_tree(
-            self.source_tree_dict, self.tree_structure
+        self.categorize_and_generate_dest_tree(
+            load_yaml(self.arg_dict["config"]),
+            self.source_tree_dict,
+            self.tree_structure,
         )
         with open(os.path.join(GENERATED_DESTINATION_TREE), "r", encoding="utf-8") as f:
             print(f.read())
@@ -117,7 +125,10 @@ class InteractiveCLI:
     def proceed(self, _):
         print("")
 
-    def __continue(self):
+    def proceed_down(self, args):
+        self.start_interactive_prompts(args.input_dict[PROCEED_DOWN])
+
+    def __continue(self, _):
         input("Press enter to continue")
 
     def __continue_and_clear(self):
