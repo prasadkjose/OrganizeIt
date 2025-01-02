@@ -12,22 +12,26 @@ class Categorizer:
     """Categorizer class that handles categorization logic based on file extensions"""
 
     def __init__(self, config):
-        if NAMES in config[RULES]:
-            self.name_rules_dict = config[RULES][NAMES]
+
+        name_rules = [rules[NAMES] for rules in config[RULES] if NAMES in rules]
+        skip_rules = [rules[SKIP] for rules in config[RULES] if SKIP in rules]
+        format_rules = [rules[FORMAT] for rules in config[RULES] if FORMAT in rules]
+
+        if len(name_rules):
+            self.name_rules_dict = name_rules[0]
 
         # create a cache of types mapped to format to quickly access them later.
         self.types_to_format_dict = {}
-        if FORMAT in config[RULES]:
-            for cat, types in config[RULES][FORMAT].items():
+        if len(format_rules):
+            for cat, types in format_rules[0].items():
                 format_types = types["types"]
                 for format_type in format_types:
                     self.types_to_format_dict[format_type] = cat
 
         # Regex of dirs and file names to skip.
-        if SKIP in config[RULES]:
-            skip_dict = config[RULES][SKIP]
-            self.skip_dir_regex = skip_dict.get(DIR)
-            self.skip_file_regex = skip_dict.get(FILES)
+        if len(skip_rules):
+            self.skip_dir_regex = skip_rules[0].get(DIR)
+            self.skip_file_regex = skip_rules[0].get(FILES)
 
     def filter_excluded_names(self, name_list, is_dir) -> list:
         """

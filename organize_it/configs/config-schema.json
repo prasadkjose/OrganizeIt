@@ -10,17 +10,24 @@
             "type": "string"
         },
         "rules": {
-            "type": "object",
+            "type": "array",
             "description": "Rule definitions. Atleast one of them must be provided. Prefereably format or name.",
-            "properties": {
+            "items": {
                 "anyOf": [
-                    {
+                {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
                         "format": {
                             "$ref": "#/$defs/format"
                         }
-                    },
-                    {
-                        "name": {
+                    }
+                },
+                {   
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "names": {
                             "type": "object",
                             "description": "Organize by file name (using a prefix or pattern. It takes precedence over format",
                             "patternProperties": {
@@ -36,8 +43,12 @@
                                 }
                             }
                         }
-                    },
-                    {
+                    }
+                },
+                {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
                         "skip": {
                             "type": "object",
                             "description": "File System objects to skip.",
@@ -53,11 +64,9 @@
                             }
                         }
                     }
+                }
                 ]
-            },
-            "required": [
-                "format"
-            ]
+            }
         }
     },
     "additionalProperties": false,

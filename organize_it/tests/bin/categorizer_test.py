@@ -42,7 +42,7 @@ class TestCategorizer:
         """Test Categorizer.filter_excluded_names with a list of sample names and exclusion list"""
         # Sample regex expressions to rest for
         test_config = {
-            "rules": {"skip": {DIR: r"\bkeystore|.app$", FILES: r".xxl$|.pga$"}}
+            "rules": [{"skip": {DIR: r"\bkeystore|.app$", FILES: r".xxl$|.pga$"}}]
         }
 
         sample_dir_names = [
@@ -64,12 +64,16 @@ class TestCategorizer:
         """Test Categorizer.check_name_pattern with a list of sample names and name_pattern config"""
 
         test_config = {
-            "rules": {
-                "names": {
-                    "dir1": {"name_pattern": "^dir1"},  # start with dir1
-                    "proj": {"name_pattern": "proj*"},  # end with proj before extension
+            "rules": [
+                {
+                    "names": {
+                        "dir1": {"name_pattern": "^dir1"},  # start with dir1
+                        "proj": {
+                            "name_pattern": "proj*"
+                        },  # end with proj before extension
+                    }
                 }
-            }
+            ]
         }
         sample_file_names = [
             ("no_match_at_all.cx", None),

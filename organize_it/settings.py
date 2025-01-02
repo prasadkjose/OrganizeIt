@@ -6,7 +6,7 @@ from pathlib import Path
 import logging
 import json
 import yaml
-import constants
+import organize_it.constants as constants
 
 # setup configuration for logging
 logging.basicConfig(

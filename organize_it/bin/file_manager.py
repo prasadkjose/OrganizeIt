@@ -5,7 +5,7 @@ import shutil
 import json
 import logging
 
-from organize_it.settings import FILES, DIR
+from organize_it.settings import FILES, DIR, FORMAT, RULES
 
 LOGGER = logging.getLogger(__name__)
 
@@ -141,7 +141,8 @@ class FileManager:
             " - Performing File operation based on the organised tree structure."
         )
         # Iterate through the sorted dict top-down and do the cp command.
-        formats_in_config = list(config["rules"]["format"].keys())
+        format_rules = [rules[FORMAT] for rules in config[RULES] if FORMAT in rules]
+        formats_in_config = list(format_rules[0].keys())
 
         def perform(current_dir_contents):
             current_level_directories = current_dir_contents.keys()

@@ -1,19 +1,19 @@
 source: ""
 destination: ""
 rules: 
-  format:
-    photo: 
-      types: ['png', 'jpg']
-    video: 
-      types: ['mp4', 'wmv']
-    document: 
-      types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
-    compressed: 
-      types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
-  skip:
-    dir: r"app$|application$"
-  names:
-    photo_by_name:
-      name_pattern: "image|pic$"
-    project_by_name:
-      name_pattern: "project"  # Regular expression to match filenames or directory names starting with 'project_'
+  - format:
+      photo: 
+        types: ['png', 'jpg']
+      video: 
+        types: ['mp4', 'wmv']
+      document: 
+        types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
+      compressed: 
+        types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
+  - skip:
+      dir: r"app$|application$"
+  - names:
+      photo_by_name:
+        name_pattern: "image|pic$"
+      project_by_name:
+        name_pattern: "project"  # Regular expression to match filenames or directory names starting with 'project_'
