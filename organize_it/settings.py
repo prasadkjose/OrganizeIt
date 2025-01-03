@@ -42,8 +42,9 @@ AI_DIR = os.path.join(ROOT_DIR, "ai")
 TMP_DIR = os.path.join(ROOT_DIR, ".tmp")
 os.makedirs(TMP_DIR, exist_ok=True)
 
+AI_GENERATED_CONFIG = f"{TMP_DIR}/.ai_generated_config.json"
+
 AI_GENERATED_DESTINATION_TREE = f"{TMP_DIR}/.ai-generated_destination.tree"
-AI_GENERATED_DESTINATION_JSON = f"{TMP_DIR}/.ai-generated_destination.json"
 GENERATED_DESTINATION_TREE = f"{TMP_DIR}/.generated_destination.tree"
 GENERATED_DESTINATION_JSON = f"{TMP_DIR}/.generated_destination.json"
 GENERATED_SOURCE_TREE = f"{TMP_DIR}/.generated.tree"
@@ -58,7 +59,7 @@ def load_json_schema():
         return json.load(tmp_file)
 
 
-def load_yaml(yaml_dir: str) -> list[any]:
+def load_yaml(yaml_dir: str, yaml_path: str = None) -> list[any]:
     """
     Loads YAML configuration files from a specified directory and returns their contents as a list.
 
@@ -77,16 +78,21 @@ def load_yaml(yaml_dir: str) -> list[any]:
         yaml.YAMLError: If any YAML file in the directory is malformed and cannot be parsed.
     """
     config_list = []
-    yaml_files_list = os.listdir(yaml_dir)  # list all files in the directory
-    for name in yaml_files_list:
-        if name.endswith(".yaml"):  # filter by .yaml
-            with open(
-                os.path.join(yaml_dir, name), "r", encoding="utf-8"
-            ) as tmp_yaml_stream:
-                try:
-                    config_list.append(yaml.full_load(tmp_yaml_stream))
-                except yaml.YAMLError as exception:
-                    raise exception
+
+    def read_file(name):
+        with open(name, "r", encoding="utf-8") as tmp_yaml_stream:
+            try:
+                config_list.append(yaml.full_load(tmp_yaml_stream))
+            except yaml.YAMLError as exception:
+                raise exception
+
+    if yaml_path:
+        read_file(yaml_path)
+    else:
+        yaml_files_list = os.listdir(yaml_dir)  # list all files in the directory
+        for name in yaml_files_list:
+            if name.endswith(".yaml"):  # filter by .yaml
+                read_file(os.path.join(yaml_dir, name))
 
     return config_list[0] if len(config_list) == 1 else config_list
 

@@ -2,6 +2,7 @@
 
 import argparse
 from organize_it.cli.interactive_cli import InteractiveCLI
+from organize_it.settings import load_yaml
 
 
 class InputArgParser:
@@ -12,16 +13,24 @@ class InputArgParser:
         self,
         generate_source_tree=None,
         categorize_and_generate_dest_tree=None,
+        generate_with_ai=None,
     ):
 
-        self._source_dir, self._dest_dir, self._move, self._interactive = (
-            self.parse_args()
-        )
+        (
+            self._source_dir,
+            self._dest_dir,
+            self._move,
+            self._interactive,
+            self._ai,
+            self._config,
+        ) = self.parse_args()
 
-        if bool(self.interactive):
+        if bool(self._interactive):
             # Get the args from the interactive CLI
             args = self.interactive_cli(
-                generate_source_tree, categorize_and_generate_dest_tree
+                generate_source_tree,
+                categorize_and_generate_dest_tree,
+                generate_with_ai,
             )
             self._source_dir, self._dest_dir, self._move, self._config = [
                 args.get(f) for f in ["src", "dest", "move", "config"]
@@ -46,8 +55,15 @@ class InputArgParser:
         return self._interactive
 
     @property
+    def ai(self):
+        return self._ai
+
+    @property
     def config(self):
-        return self._config
+        if self._interactive:
+            return self._config  # The config is already loaded by interactive_cli
+
+        return load_yaml(self._config)
 
     def parse_args(self) -> dict:
         """
@@ -96,19 +112,27 @@ class InputArgParser:
                 help="--interactive: Use this flag to make the CLI tool interactive.",
                 action="store_true",
             )
+            parser.add_argument(
+                "-ai",
+                "--ai",
+                help="--ai: Use this flag to use AI to organize your files.",
+                action="store_true",
+            )
+
             cli_args = parser.parse_args()
             return [
-                vars(cli_args).get(f) for f in ["src", "dest", "move", "interactive"]
+                vars(cli_args).get(f)
+                for f in ["src", "dest", "move", "interactive", "ai", "config"]
             ]
 
         except SystemExit as exception:
             raise exception
 
     def interactive_cli(
-        self, generate_source_tree, categorize_and_generate_dest_tree
+        self, generate_source_tree, categorize_and_generate_dest_tree, generate_with_ai
     ) -> dict:
         interactive_cli = InteractiveCLI(
-            generate_source_tree, categorize_and_generate_dest_tree
+            generate_source_tree, categorize_and_generate_dest_tree, generate_with_ai
         )
         arg_dict = interactive_cli.start_interactive_prompts()
         return arg_dict

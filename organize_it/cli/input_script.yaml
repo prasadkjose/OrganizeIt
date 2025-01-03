@@ -1,4 +1,4 @@
-# OrganizeIt Interactive CLI - YAML Configuration
+# OrganizeIt Interactive CLI - YAML Input Scripts.
 # This YAML file defines a series of inputs and prompts for the OrganizeIt interactive file
 # organization tool. Each section corresponds to a step or interaction in the process of organizing
 # files and directories. The `print` field defines the message displayed to the user, and the `arg`
@@ -11,15 +11,6 @@
         y: "proceed"
         h: "help_me"
 - input: 
-    print: "Do you have a configuration file to load? (Press y for yes, n for no)"
-    response: 
-        y: "proceed_down"
-        n: "proceed"
-    proceed_down:
-        - input: 
-            print: "Enter your configuration file Path"
-            arg: config
-- input: 
     print: "Enter your source directory: (This is where your files currently live. Let's start the journey!)"
     arg: "src" # Source path to be set.
 - input:
@@ -29,7 +20,23 @@
     print: "Here's the layout of your source directory: We'll map out the structure for you. (Press y to view it, or n to skip)"
     response: 
         y: "view_tree_source"
-        n: "proceed"
+        n: "view_tree_source" # Create source tree but don't print it. 
+- input: 
+    print: "Do you want an AI to take a crack at it? We will scan your source directory and generate a config file for you to review. (Press y for yes, n for no)"
+    response: 
+        y: "generate_config_with_ai"
+        n: "proceed_down"
+    proceed_down:
+        - input: 
+            print: "Do you have a configuration file to load? (Press y for yes, n for no)"
+            response: 
+                y: "proceed_down"
+                n: "proceed"
+            proceed_down:
+                - input: 
+                    print: "Enter your configuration file Path"
+                    arg: config
+
 - "Organizing your files... Hold tight as OrganizeIt sorts everything into neat categories."
 - input:
     print: "Want to preview the result? Press Y to see how everything looks, or n to skip this step."

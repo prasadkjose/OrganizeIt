@@ -17,7 +17,7 @@ from organize_it.settings import (
     GENERATED_SOURCE_TREE,
     GENERATED_SOURCE_JSON,
     TEST_FIXTURES_DIR,
-    load_yaml,
+    AI_GENERATED_CONFIG,
 )
 
 from organize_it.cli.input_arg_parser import InputArgParser
@@ -25,8 +25,18 @@ from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
 from organize_it.bin.categorizer import Categorizer
 from organize_it.schema_validation.validator import YAMLConfigValidator
+from organize_it.ai.gpt_wrapper import GPTWrapper
 
 logger = logging.getLogger(__name__)
+
+
+def generate_with_ai():
+    wrapper = GPTWrapper()
+    with open(os.path.join(GENERATED_SOURCE_TREE), "r", encoding="utf-8") as f:
+        tree = f.read()
+    # Load the config from the user input
+    print("Generating config with AI... Please be patient")
+    return wrapper.generate_config(unsorted_tree=tree, file_path=AI_GENERATED_CONFIG)
 
 
 def process_source_and_generate_tree(source_directory, destination_directory):
@@ -139,12 +149,17 @@ def main():
     #   2. Source from config
     #   3. Current directory
     cli_parser = InputArgParser(
-        process_source_and_generate_tree, categorize_and_generate_dest_tree
+        process_source_and_generate_tree,
+        categorize_and_generate_dest_tree,
+        generate_with_ai,
     )
-    if hasattr(cli_parser, "config"):
-        config = load_yaml(cli_parser.config)
+
+    if hasattr(cli_parser, "ai"):
+        config = generate_with_ai()
+    elif hasattr(cli_parser, "config"):
+        config = cli_parser.config
     else:
-        config = "ssss "
+        config = CONFIG
 
     if cli_parser.move:
         move_files = cli_parser.move

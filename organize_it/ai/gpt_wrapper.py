@@ -10,6 +10,7 @@ from gpt4all import GPT4All
 from organize_it.settings import (
     TMP_DIR,
     SCHEMA,
+    AI_GENERATED_CONFIG,
     get_constant,
     load_yaml,
     AI_DIR,
@@ -51,7 +52,7 @@ class GPTWrapper:
 
     def generate(self, unsorted_tree, user_propmts=None, file_path: str = None):
         if not user_propmts:
-            LOGGER.info("Asking OpenAI GPT for some input")
+            LOGGER.info(" - Asking OpenAI GPT for some input")
 
         # A pydantic subclass of the type of return object.
         class YamlResponseFormat(BaseModel):
@@ -75,23 +76,32 @@ class GPTWrapper:
             response_format=YamlResponseFormat,
         )
 
-        if file_path:
-            LOGGER.info(" - Saving file structure to %s", os.path.basename(file_path))
-
         return completion.choices[0].message
 
-    def generate_config(self, unsorted_tree, user_propmts=None, file_path=None):
+    def generate_config(
+        self, unsorted_tree, user_propmts=None, file_path=AI_GENERATED_CONFIG
+    ):
 
+        LOGGER.info(" - Generating config with AI... Please be patient")
         result = self.generate(
             unsorted_tree,
             user_propmts,
             file_path,
         )
 
-        json_object = json.loads(result.parsed.config)
+        try:
+            json_object = json.loads(result.parsed.config)
+        except ValueError as exeption:
+            LOGGER.debug(" - Regenerating the config due to: %s", str(exeption))
+            result = self.generate_config(
+                unsorted_tree,
+                {"role": "user", "content": self.user_prompts_iter.next()},
+                file_path,
+            )
+
+        # Validate the config.
         v = YAMLConfigValidator(json_object)
         valid = v.validate_config()
-
         if not valid:
             result = self.generate_config(
                 unsorted_tree,
@@ -99,11 +109,13 @@ class GPTWrapper:
                 file_path,
             )
 
-        FileManager.create_and_write_file(
-            file_path,
-            lambda file_stream: json.dump(
-                json_object, file_stream, ensure_ascii=False, indent=4
-            ),
-        )
+        if file_path:
+            LOGGER.info(" - Saving file structure to %s", os.path.basename(file_path))
+            FileManager.create_and_write_file(
+                file_path,
+                lambda file_stream: json.dump(
+                    json_object, file_stream, ensure_ascii=False, indent=4
+                ),
+            )
 
-        return result
+        return json_object
