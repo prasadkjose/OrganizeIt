@@ -2,15 +2,16 @@
 
 import os
 from types import SimpleNamespace
+import logging
 from organize_it.settings import (
     load_yaml,
     ROOT_DIR,
-    AI_GENERATED_CONFIG,
     exit_gracefully,
     GENERATED_SOURCE_TREE,
     GENERATED_DESTINATION_TREE,
 )
-from organize_it.ai.gpt_wrapper import GPTWrapper
+
+LOGGER = logging.getLogger(__name__)
 
 INPUT_SCRIPT_PATH = os.path.join(ROOT_DIR, "cli")
 
@@ -84,10 +85,12 @@ class InteractiveCLI:
                                 print("That was an incorrect input. Please try again.")
                     else:
                         # Wrong prompt structure
-                        exit_gracefully()
+                        exit_gracefully(
+                            "Every input script section should have a print statement."
+                        )
             else:
                 # Wrong prompt structure
-                exit_gracefully()
+                exit_gracefully("Unsuported Prompt structure")
         return self.arg_dict
 
     # Arg sideffects.
@@ -125,7 +128,11 @@ class InteractiveCLI:
             self.file_manager,
             self.tree_structure,
             self.source_tree_dict,
-        ) = self.generate_source_tree(self.arg_dict["src"], self.arg_dict["dest"])
+        ) = self.generate_source_tree(
+            source_directory=self.arg_dict["src"],
+            destination_directory=self.arg_dict["dest"],
+            generated_source_tree_path=GENERATED_SOURCE_TREE,
+        )
         # Print the source tree only if the use chooses to view it.
         if args.user_response == "y":
             with open(os.path.join(GENERATED_SOURCE_TREE), "r", encoding="utf-8") as f:
@@ -136,10 +143,12 @@ class InteractiveCLI:
         """This method calls :func:`organizeIt.__main__.categorize_and_generate_dest_tree`"""
         # The YAML config is loaded either using AI or a static config.
         self.categorize_and_generate_dest_tree(
-            self.config,
-            self.source_tree_dict,
-            self.tree_structure,
+            config=self.config,
+            source_tree_dict=self.source_tree_dict,
+            tree_structure=self.tree_structure,
+            dest_tree_path=GENERATED_DESTINATION_TREE,
         )
+
         with open(os.path.join(GENERATED_DESTINATION_TREE), "r", encoding="utf-8") as f:
             print(f.read())
 

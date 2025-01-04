@@ -30,16 +30,20 @@ from organize_it.ai.gpt_wrapper import GPTWrapper
 logger = logging.getLogger(__name__)
 
 
-def generate_with_ai():
+def generate_with_ai(
+    generated_source_tree_path: str = GENERATED_SOURCE_TREE,
+):
     wrapper = GPTWrapper()
-    with open(os.path.join(GENERATED_SOURCE_TREE), "r", encoding="utf-8") as f:
+    with open(os.path.join(generated_source_tree_path), "r", encoding="utf-8") as f:
         tree = f.read()
     # Load the config from the user input
-    print("Generating config with AI... Please be patient")
-    return wrapper.generate_config(unsorted_tree=tree, file_path=AI_GENERATED_CONFIG)
+    logger.info(" - Generating config with AI... Please be patient")
+    return wrapper.generate_config(unsorted_tree=tree)
 
 
-def process_source_and_generate_tree(source_directory, destination_directory):
+def process_source_and_generate_tree(
+    source_directory: str, destination_directory: str, generated_source_tree_path: str
+):
     """
     Processes a source directory path, generates a hierarchical tree structure of files,
     and generates a trees structure. If the tree structure has already been
@@ -79,13 +83,13 @@ def process_source_and_generate_tree(source_directory, destination_directory):
     file_manager = FileManager(source_directory, destination_directory)
 
     # Read the source directory and create oIt tree input dictionary and save it to a file
-    source_tree_dict = file_manager.file_walk(None, GENERATED_SOURCE_JSON)
+    source_tree_dict = file_manager.file_walk(file_path=GENERATED_SOURCE_JSON)
 
     # write the source tree structure result to a file
     tree_structure = TreeStructure()
     FileManager.create_and_write_file(
-        GENERATED_SOURCE_TREE,
-        lambda file_stream: tree_structure.generate_tree_structure(
+        file_path=generated_source_tree_path,
+        callback=lambda file_stream: tree_structure.generate_tree_structure(
             source_tree_dict, "", file_stream
         ),
     )
@@ -93,7 +97,12 @@ def process_source_and_generate_tree(source_directory, destination_directory):
     return file_manager, tree_structure, source_tree_dict
 
 
-def categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure):
+def categorize_and_generate_dest_tree(
+    config: dict,
+    source_tree_dict: dict,
+    tree_structure: TreeStructure,
+    dest_tree_path: str,
+):
     """
     Categorizes files and directories paths from the source tree dictionary based on a
     given configuration, and then generates and writes the categorized tree structure
@@ -113,7 +122,7 @@ def categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure):
               directories are organized according to the given configuration.
 
     Example:
-        categorized_tree_dict = categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure)
+        categorized_tree_dict = categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure, dest_tree_path)
     """
 
     # Categorize the files and dirs based on the given config
@@ -121,8 +130,8 @@ def categorize_and_generate_dest_tree(config, source_tree_dict, tree_structure):
     categorized_tree_dict = categorizer.categorize_dict(source_tree_dict, True)
 
     FileManager.create_and_write_file(
-        GENERATED_DESTINATION_TREE,
-        lambda file_stream: tree_structure.generate_tree_structure(
+        file_path=dest_tree_path,
+        callback=lambda file_stream: tree_structure.generate_tree_structure(
             categorized_tree_dict, "", file_stream
         ),
     )
@@ -194,17 +203,22 @@ def main():
     ##########################DUMMY###################################################
 
     file_manager, tree_structure, source_tree_dict = process_source_and_generate_tree(
-        source_directory, destination_directory
+        source_directory=source_directory,
+        destination_directory=destination_directory,
+        generated_source_tree_path=GENERATED_SOURCE_TREE,
     )
 
     categorized_tree_dict = categorize_and_generate_dest_tree(
-        config, source_tree_dict, tree_structure
+        config=config,
+        source_tree_dict=source_tree_dict,
+        tree_structure=tree_structure,
+        dest_tree_path=GENERATED_DESTINATION_TREE,
     )
 
     file_manager.categorize_and_sort_file(
-        config,
-        categorized_tree_dict[DIR],
-        move_files,  # To delete the source files.
+        config=config,
+        sorted_tree_dict=categorized_tree_dict[DIR],
+        move_files=move_files,  # To delete the source files.
     )
     # Explore SYMLINKS(unix), Junction(Windows)
 

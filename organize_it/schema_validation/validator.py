@@ -58,11 +58,11 @@ class YAMLConfigValidator:
             return True
         else:
             for item_error in lst_errors:
-                LOGGER.error(
-                    " - Blueprint validation error: %s / Reason: %s / Where: %s ",
-                    item_error.message,
-                    str(item_error.schema),
-                    str(list(item_error.absolute_path)),
+                exit_gracefully(
+                    (
+                        " - Blueprint validation error: %s / Reason: %s / Where: %s ",
+                        item_error.message,
+                        str(item_error.schema),
+                        str(list(item_error.absolute_path)),
+                    ),
                 )
-
-            exit_gracefully()

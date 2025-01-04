@@ -108,11 +108,31 @@ TEST_FIXTURES_CONFIGS = load_yaml(TEST_FIXTURES_DIR)
 
 
 # Util method to exit the tool gracefully
-def exit_gracefully():
-    logger.error(
-        "Exiting OrganizeIt due to an error. Please check the verbose logs for more information."
-    )
-    sys.exit(1)
+def exit_gracefully(error):
+    """
+    Exits the tool gracefully, logging the error and performing cleanup if needed.
+
+    Args:
+        error (Exception or str): The error that caused the exit, or a descriptive message.
+
+    Returns:
+        None
+    """
+    try:
+        # Log the error details
+        if isinstance(error, Exception):
+            logger.error(" - Exiting due to an exception: %s", str(error))
+        else:
+            logger.error(" - Exiting due to an error: %s", error)
+
+        # Perform any cleanup operations if necessary
+        logger.info(" - Performing cleanup operations...")
+
+        # Exit the program with a non-zero status code to indicate failure
+        sys.exit(1)
+    except Exception as cleanup_error:
+        logger.critical(" - An error occurred during cleanup: %s", str(cleanup_error))
+        sys.exit(2)
 
 
 def get_constant(name):

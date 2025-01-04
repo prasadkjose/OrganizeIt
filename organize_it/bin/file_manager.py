@@ -5,7 +5,14 @@ import shutil
 import json
 import logging
 
-from organize_it.settings import FILES, DIR, FORMAT, RULES
+from organize_it.settings import (
+    FILES,
+    DIR,
+    FORMAT,
+    RULES,
+    GENERATED_SOURCE_TREE,
+    exit_gracefully,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,7 +43,7 @@ class FileManager:
     A class to handle complex file operations such as traversal, generating directory tree. etc
 
     Methods:
-        file_walk(self, current_dir: str) -> dict
+        file_walk(self, current_dir: str = None, file_path: str = None) -> dict
         def generate_tree_structure(self, tree_dict, indent, generated_tree_file)
     """
 
@@ -44,6 +51,17 @@ class FileManager:
         """Constructor"""
         self.source_path = sanitize_file_path(source_path)
         self.destination_path = sanitize_file_path(destination_path)
+
+        # Make sure the source directory has the necessary permissions.
+        if not (
+            os.path.exists(self.source_path) and os.access(self.source_path, os.W_OK)
+        ):
+            exit_gracefully(
+                (
+                    "The following source file is not accessible: %s",
+                    self.source_path,
+                )
+            )
 
     def file_walk(self, current_dir: str = None, file_path: str = None) -> dict:
         """
@@ -103,13 +121,13 @@ class FileManager:
                                 [os.path.join(rel_dir, f) for f in filenames]
                             ),
                             # Recursive call for subdirectories
-                            DIR: self.file_walk(dirpath)[DIR],
+                            DIR: self.file_walk(current_dir=dirpath)[DIR],
                         }
         if file_path:
             LOGGER.info(" - Saving file structure to %s", os.path.basename(file_path))
             FileManager.create_and_write_file(
-                file_path,
-                lambda file_stream: json.dump(
+                file_path=file_path,
+                callback=lambda file_stream: json.dump(
                     file_dict, file_stream, ensure_ascii=False, indent=4
                 ),
             )
@@ -163,6 +181,16 @@ class FileManager:
                     if file_to_be_copied.startswith("./"):
                         cleaned_file_name = file_to_be_copied.replace(("."), "", 1)
                     source_file_path = f"{self.source_path}/{cleaned_file_name}"
+                    if not (
+                        os.path.exists(source_file_path)
+                        and os.access(source_file_path, os.W_OK)
+                    ):
+                        exit_gracefully(
+                            (
+                                "The following source file is not accessible: %s",
+                                source_file_path,
+                            )
+                        )
                     if move_files:
                         shutil.move(source_file_path, dest_subdir_path)
                     else:
@@ -176,7 +204,7 @@ class FileManager:
         LOGGER.info(" - Successfully categorized and organized your files.")
 
     @staticmethod
-    def create_and_write_file(file_path: str, callback):
+    def create_and_write_file(callback, file_path: str):
         """
         Creates a file at the specified file_path, ensuring that the parent directory exists.
         Then, it writes content to the file by calling the provided callback function.
@@ -196,7 +224,7 @@ class FileManager:
             create_and_write_file("/path/to/file.txt", write_content)
         """
         # Split the file path into parent directory and file name
-        parent_path, file_name = os.path.split(file_path)
+        parent_path, _ = os.path.split(file_path)
 
         # Ensure the parent directory exists
         os.makedirs(parent_path, exist_ok=True)
@@ -206,5 +234,4 @@ class FileManager:
             with open(file_path, "w", encoding="utf-8") as generated_tree_file:
                 callback(generated_tree_file)
         except Exception as e:
-            # Optionally handle exceptions, e.g., logging
-            raise Exception(f"Failed to write to file {file_path}: {e}")
+            exit_gracefully(f"Failed to write to file {file_path}: {e}")

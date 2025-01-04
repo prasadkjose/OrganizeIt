@@ -38,8 +38,8 @@ class TestFileManager:
 
         manager = FileManager(source_directory, sample_dest_dir)
         tree_dict = manager.file_walk(
-            None,
-            os.path.join(
+            current_dir=None,
+            file_path=os.path.join(
                 TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
             ),
         )
@@ -57,13 +57,12 @@ class TestFileManager:
         manager = FileManager(source_directory, destination_directory)
 
         manager.categorize_and_sort_file(
-            CONFIG[1],
-            CATEGORIZED_DIR_DICTIONARY,
+            config=CONFIG[1], sorted_tree_dict=CATEGORIZED_DIR_DICTIONARY
         )
 
         # perform file walk and test with fixture.
         manager = FileManager(destination_directory, "")
-        tree_dict = manager.file_walk(None)
+        tree_dict = manager.file_walk()
 
         fixture = {
             "document": {
