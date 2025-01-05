@@ -7,6 +7,10 @@ from organize_it.settings import SCHEMA, exit_gracefully
 
 LOGGER = logging.getLogger(__name__)
 
+# TODO: Validaotr super class
+
+# TODO: Pydantic validator subclass
+
 
 class YAMLConfigValidator:
     """
