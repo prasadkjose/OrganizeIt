@@ -18,13 +18,14 @@ from organize_it.settings import (
     GENERATED_SOURCE_JSON,
     TEST_FIXTURES_DIR,
     AI_GENERATED_CONFIG,
+    SCHEMA,
 )
 
 from organize_it.cli.input_arg_parser import InputArgParser
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
 from organize_it.bin.categorizer import Categorizer
-from organize_it.schema_validation.validator import YAMLConfigValidator
+from organize_it.schema_validation.validator import JSONSchemaValidator
 from organize_it.ai.gpt_wrapper import GPTWrapper
 
 logger = logging.getLogger(__name__)
@@ -176,7 +177,7 @@ def main():
         move_files = False
 
     # Validate the YAML config first with the corresponding json-schema
-    schema_validator = YAMLConfigValidator(config)
+    schema_validator = JSONSchemaValidator(config_data=config, schema=SCHEMA)
     schema_validator.validate_config()
 
     if cli_parser.src:

@@ -16,7 +16,7 @@ from organize_it.settings import (
     AI_DIR,
     exit_gracefully,
 )
-from organize_it.schema_validation.validator import YAMLConfigValidator
+from organize_it.schema_validation.validator import JSONSchemaValidator
 from organize_it.bin.file_manager import FileManager
 
 LOGGER = logging.getLogger(__name__)
@@ -145,7 +145,7 @@ class GPTWrapper:
             3. If parsing fails or validation fails:
                 - Logs the issue and retries with the next user prompt from `self.user_prompts_iter`.
                 - Exits gracefully if there are no more user prompts.
-            4. Validates the configuration using `YAMLConfigValidator`.
+            4. Validates the configuration using `JSONSchemaValidator`.
             5. Saves the validated configuration to `file_path` if provided.
 
         Notes:
@@ -176,7 +176,7 @@ class GPTWrapper:
                 )
 
             # Validate the config.
-            v = YAMLConfigValidator(json_object)
+            v = JSONSchemaValidator(config_data=json_object, schema=SCHEMA)
             valid = v.validate_config()
             if not valid:
                 result = self.generate_config(

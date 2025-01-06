@@ -1,12 +1,12 @@
 source: ""
 destination: ""
 rules:  
-  - incorrctKey:
-    photo: 
-      types: {'png', 'jpg'}
-    video: 
-      types: ['mp4', 'wmv']
-    document: 
-      types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
-    compressed: 
-      types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']
+  - format:
+      photo: 
+        types: {'png', 'jpg'}
+      video: 
+        types: ['mp4', 'wmv']
+      document: 
+        types: ['doc', 'docx', 'pdf', 'txt', 'ppt']
+      compressed: 
+        types: ['zip', 'tar', 'deb', 'pkg', 'rar', 'tar.gz']

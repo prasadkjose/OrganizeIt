@@ -2,34 +2,35 @@
 
 import logging
 import jsonschema
+from abc import ABC, abstractmethod
+from pydantic import ValidationError
 
-from organize_it.settings import SCHEMA, exit_gracefully
+from organize_it.settings import exit_gracefully
 
 LOGGER = logging.getLogger(__name__)
 
-# TODO: Validaotr super class
 
-# TODO: Pydantic validator subclass
-
-
-class YAMLConfigValidator:
+# Validator abstract class
+class Validator(ABC):
     """
-    A class responsible for validating YAML configuration files.
+    Base validator class responsible for validating configuration files.
 
     This class is designed to load and validate YAML configuration files
-    against predefined json-schema to ensure the configuration is valid
+    against predefined json-schema and/or pydantic dataclasses to ensure the configuration is valid
     before being used in the tool. It checks for required fields, data types,
     and any additional validation rules that may apply to the configuration.
 
     """
 
-    def __init__(self, config_data):
+    # Concrete method
+    def __init__(self, config_data, schema):
         """
-        Initializes the YAMLConfigValidator instance with the json-schema and YAML config.
+        Initializes the Validator instance with the necessary validator schemas and YAML config.
         """
-        self.__obj_schema = SCHEMA
-        self.__yaml_data = config_data
+        self.obj_schema = schema
+        self.yaml_data = config_data
 
+    @abstractmethod
     def validate_config(self) -> bool:
         """
         Validates the YAML config against the schema.
@@ -43,16 +44,38 @@ class YAMLConfigValidator:
         Raises:
             ValidationError: If the YAML data does not conform to the validation rules.
         """
+        pass
+
+
+# Pydantic validator subclass
+class PydanticSchemaValidator(Validator):
+    def validate_config(self) -> bool:
+        LOGGER.info(" - Starting Config Validation.")
+        try:
+            is_valid = bool(self.obj_schema.model_validate(self.yaml_data))
+        except ValidationError as exc:
+            exit_gracefully(exc.errors()[0]["type"])
+
+        return is_valid
+
+
+class JSONSchemaValidator(Validator):
+    """
+    Child class responsible for validating YAML configuration files using the defined json-schema.
+    """
+
+    # Inherited
+    def validate_config(self) -> bool:
         LOGGER.info(" - Starting Config Validation.")
         # Create the validator instance
         self.__obj_validator = jsonschema.Draft202012Validator(
-            self.__obj_schema,
+            self.obj_schema,
             format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER,
         )
         return self.__handle_errors()
 
     def __handle_errors(self):
-        obj_errors = self.__obj_validator.iter_errors(self.__yaml_data)
+        obj_errors = self.__obj_validator.iter_errors(self.yaml_data)
         lst_errors = []
         for error in obj_errors:
             lst_errors.append(error)

@@ -54,7 +54,7 @@ GENERATED_SOURCE_JSON = f"{TMP_DIR}/.generated.json"
 def load_json_schema():
     """Load json-schema file to memory"""
     with open(
-        os.path.join(CONFIG_DIR, "config-schema.json"), "r", encoding="utf-8"
+        os.path.join(CONFIG_DIR, "config_schema.json"), "r", encoding="utf-8"
     ) as tmp_file:
         return json.load(tmp_file)
 
@@ -132,7 +132,7 @@ def exit_gracefully(error):
         sys.exit(1)
     except Exception as cleanup_error:
         logger.critical(" - An error occurred during cleanup: %s", str(cleanup_error))
-        sys.exit(2)
+        sys.exit(1)
 
 
 def get_constant(name):

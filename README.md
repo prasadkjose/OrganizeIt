@@ -114,10 +114,10 @@ organizeIt/
     ├── interactive_cli     # Module for Interactice mode use inputs
     └── input_script.yaml   # YAML file that defines a list of use prompt flows for your CLI tool in interactive mode
 ├── configs/                # Utility functions for file operations
-    ├── config-schema.json  # A JSON-Schema file to validate the custom config.yaml
+    ├── config_schema.json  # A JSON-Schema file to validate the custom config.yaml
     └── config.yaml         # A factory YAML file where you can define your own custom file categories and their corresponding extensions.
 ├── schema_validation/      # Schema validation 
-    └── validator.py        # Validate the config file with rules set in config-schema.json
+    └── validator.py        # Validate the config file with rules set in config_schema.json
 ├── .tmp/                   # The .tmp directory stores temporary files that are short-lived and can be safely deleted when no longer needed.
 └── tests/                  # Testing Module. It follows the same structure as the project itself. 
     ├── _fixtures_          # All necessary fixtures used in pytest

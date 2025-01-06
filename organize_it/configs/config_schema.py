@@ -1,23 +1,22 @@
 """ This is a Pydantic schema class to complement json-schema"""
 
-from typing import List, Union, Dict, Optional
-from pydantic import BaseModel, Field
+from typing import List, Dict, Optional
+from pydantic import BaseModel, Field, RootModel
 
 
 class FormatRule(BaseModel):
     types: List[str] = Field(
-        title="Format Rulest",
+        title="Format Rules",
         description="List of acceptable file types for this format rule.",
     )
 
 
 class SkipRule(BaseModel):
-
     dir: Optional[str] = Field(
-        title="Skip Directories", description="Regex to match directories to skip."
+        "", title="Skip Directories", description="Regex to match directories to skip."
     )
     files: Optional[str] = Field(
-        title="Skip File Names", description="Regex to match files to skip."
+        "", title="Skip File Names", description="Regex to match files to skip."
     )
 
 
@@ -29,7 +28,7 @@ class NamePattern(BaseModel):
 
 
 class NamesRule(BaseModel):
-    __root__: Dict[str, NamePattern] = Field(
+    RootModel.root: Dict[str, NamePattern] = Field(
         title="Naming Rules",
         description="Dictionary of name patterns for organization.",
     )
@@ -49,10 +48,8 @@ class RuleItem(BaseModel):
 
 
 class ConfigSchema(BaseModel):
-    source: str = Field(..., description="Source directory for files to be organized.")
-    destination: str = Field(
-        ..., description="Destination directory for organized files."
-    )
+    source: str = Field(description="Source directory for files to be organized.")
+    destination: str = Field(description="Destination directory for organized files.")
     rules: List[RuleItem] = Field(
         ..., description="List of rules for organizing files."
     )
