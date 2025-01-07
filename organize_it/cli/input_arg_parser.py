@@ -52,11 +52,11 @@ class InputArgParser:
 
     @property
     def interactive(self):
-        return self._interactive
+        return bool(self._interactive)
 
     @property
     def ai(self):
-        return self._ai
+        return bool(self._ai)
 
     @property
     def config(self):

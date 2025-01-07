@@ -106,6 +106,17 @@ CONFIG = load_yaml(CONFIG_DIR)
 # Load test fixures
 TEST_FIXTURES_CONFIGS = load_yaml(TEST_FIXTURES_DIR)
 
+# A simple state management system.
+CURRENT_RUN = False
+
+
+def get_or_update_current_state(value: bool = None):
+    global CURRENT_RUN
+    if value is not None:
+        CURRENT_RUN = value
+    print(f"current_state {CURRENT_RUN}")
+    return CURRENT_RUN
+
 
 # Util method to exit the tool gracefully
 def exit_gracefully(error):
@@ -127,6 +138,7 @@ def exit_gracefully(error):
 
         # Perform any cleanup operations if necessary
         logger.info(" - Performing cleanup operations...")
+        get_or_update_current_state(False)
 
         # Exit the program with a non-zero status code to indicate failure
         sys.exit(1)

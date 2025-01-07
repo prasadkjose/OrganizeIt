@@ -42,18 +42,18 @@
     print: "Want to preview the result? Press Y to see how everything looks, or n to skip this step."
     response: 
         y: "view_tree_destination"
-        n: "proceed"
+        n: "view_tree_destination" # Create dest tree but don't print it. 
 - input:
     print: "Looks good? Would you like to move (press m) or copy (press c) your files over to the destination?"
     response: # Move arg to be set
         m: "set_arg"
         c: "set_arg"
+- "Mission accomplished! Your files are now beautifully organized. Thanks for choosing OrganizeIt — where clutter meets its match!"
 - input:
     print: "Got more directories to organize? (Press y to organize another directory, or n to wrap things up)"
     response: 
         y: "restart"
         n: "proceed"
-- "Mission accomplished! Your files are now beautifully organized. Thanks for choosing OrganizeIt — where clutter meets its match!"
 
   
   

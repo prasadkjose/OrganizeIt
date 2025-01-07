@@ -46,10 +46,11 @@ class InteractiveCLI:
         self.generate_source_tree = generate_source_tree
         self.categorize_and_generate_dest_tree = categorize_and_generate_dest_tree
         self.generate_with_ai = generate_with_ai
+        self.arg_dict = {}
 
     def start_interactive_prompts(self, script_list: list = None) -> dict:
         curr_script_list = self.script_list if not script_list else script_list
-        self.arg_dict = {}
+
         for prompt_item in curr_script_list:
             if isinstance(prompt_item, str):
                 #  if list item is string, then print it.
@@ -96,8 +97,8 @@ class InteractiveCLI:
     # Arg sideffects.
     def on_config_set(self, _):
         # Load the config from the user input
-        self.config = load_yaml(self.arg_dict["config"])
-        self.arg_dict["config"] = self.config
+        config = load_yaml(self.arg_dict["config"])
+        self.arg_dict["config"] = config
 
     def help_me(self, _):
         with open(
@@ -107,8 +108,8 @@ class InteractiveCLI:
         self.__continue_and_clear()
 
     def generate_config_with_ai(self, _):
-        self.config = self.generate_with_ai()
-        self.arg_dict["config"] = self.config
+        config = self.generate_with_ai()
+        self.arg_dict["config"] = config
 
     def set_arg(self, args):
         """
@@ -139,20 +140,21 @@ class InteractiveCLI:
                 print(f.read())
                 self.__continue_and_clear()
 
-    def view_tree_destination(self, _):
+    def view_tree_destination(self, args):
         """This method calls :func:`organizeIt.__main__.categorize_and_generate_dest_tree`"""
         # The YAML config is loaded either using AI or a static config.
         self.categorize_and_generate_dest_tree(
-            config=self.config,
             source_tree_dict=self.source_tree_dict,
             tree_structure=self.tree_structure,
             dest_tree_path=GENERATED_DESTINATION_TREE,
         )
-
-        with open(os.path.join(GENERATED_DESTINATION_TREE), "r", encoding="utf-8") as f:
-            print(f.read())
-
-        self.__continue_and_clear()
+        # Print the source tree only if the use chooses to view it.
+        if args.user_response == "y":
+            with open(
+                os.path.join(GENERATED_DESTINATION_TREE), "r", encoding="utf-8"
+            ) as f:
+                print(f.read())
+                self.__continue_and_clear()
 
     def proceed(self, _):
         print("")

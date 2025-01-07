@@ -71,18 +71,6 @@ class GPTWrapper:
 
         Raises:
             Any exceptions raised by the OpenAI client or Pydantic validation will propagate.
-
-        Example:
-            unsorted_tree = {
-                "files": ["file1.txt", "file2.jpg"],
-                "directories": {"dir1": {"files": ["file3.pdf"]}},
-            }
-            user_prompts = {
-                "role": "user",
-                "content": "Organize photos and documents separately."
-            }
-            config = self.generate(unsorted_tree, user_prompts)
-            print(config)
         """
         if not user_propmts:
             LOGGER.info(" - Asking OpenAI GPT for some input")
