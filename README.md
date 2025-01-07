@@ -17,6 +17,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Testing](#testing)
+- [AI Integration](#ai-integration)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -97,6 +98,40 @@ This way, you can display a preview of the result but will not modify any files.
 
 If you tech savvy, you can find the generated dictionaries and tree structures in the `.tmp` directory in the project.
 
+## AI Integration
+
+This project incorporates AI capabilities using the OpenAI Python SDK to perform various tasks such as generating configurations.
+
+**OpenAI Python SDK**
+The OpenAI Python SDK is utilized to interact with OpenAI's language models like gpt-4. The SDK provides a seamless way to send requests and retrieve results from the OpenAI API.
+
+**Adding Your OpenAI API Key**
+To use the AI features, you must provide an OpenAI API key. There are two recommended ways to do this:
+
+- ##### Environment Variable
+
+    Add the API key to your system's environment variables.
+    Example for a UNIX-based system:
+    ``` bash
+    export OPENAI_API_KEY="your_openai_api_key"
+    ```
+
+    On Windows (using Command Prompt):
+    cmd 
+    ```
+    set OPENAI_API_KEY=your_openai_api_key
+    ```
+    The SDK will automatically pick up the OPENAI_API_KEY environment variable if it is set.
+
+- ##### Constants File
+
+    Alternatively, you can store the API key in a constants.py file in your project.
+    Example constants.py:
+    ``` bash
+    OPENAI_API_KEY = "your_openai_api_key"
+    ```
+
+
 ## Project Structure
 
 Here's an overview of the **OrganizeIt** project structure:
@@ -105,6 +140,10 @@ Here's an overview of the **OrganizeIt** project structure:
 organizeIt/
 ├── __main__.py             # Main entry point for the tool 
 ├── settings.py             # Common utility methods and constants used in the tool.
+├── constants.py            # Add your API keys here. (for example, OPEN_API_KEY)
+├── ai/                     # LLM wrapper implementations
+    ├── ai_prompts.yaml     # Prompts used in the GPT. Both system and user role based prompts are defined here. 
+    ├── gpt_wrapper.py      # Wrapper implementations for LLM model for OpenAI GPT and GPT4All(TODO).
 ├── bin/                    # Utility class implementations
     ├── file_manager.py     # Handles file manipulation (move, rename, etc.)
     ├── tree_structure.py   # Generates and manages tree structure representation   
@@ -131,7 +170,7 @@ organizeIt/
 I welcome contributions to **OrganizeIt**! If you'd like to contribute, please follow these steps:
 
 1. Fork the repository.
-2. ```python3 setup.py install``` to start developing.
+2. ```python3 setup.py develop``` to start developing.
 2. Create a new branch for your feature or bug fix.
 3. Make your changes and write tests if applicable. Also make sure none of the exisiting tests fail. 
 4. Submit a pull request with a clear description of your changes.
