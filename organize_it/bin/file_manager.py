@@ -4,13 +4,12 @@ import os
 import shutil
 import json
 import logging
-
+from functools import cache
 from organize_it.settings import (
     FILES,
     DIR,
     FORMAT,
     RULES,
-    GENERATED_SOURCE_TREE,
     exit_gracefully,
 )
 

@@ -11,6 +11,8 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
     CATEGORIZED_DIR_NAME,
     CATEGORIZED_DIR_DICTIONARY,
     UNCATEGORIZED_DIR_DICTIONARY,
+    GENERATED_SOURCE_JSON,
+    UNCATEGORIZED_DIR_PATH,
 )
 from organize_it.tests.test_utils import dicts_are_equal
 
@@ -31,18 +33,13 @@ class TestFileManager:
 
     def test_file_walk(self):
         """Test FileManager.file_walk method with sample generated directories and files."""
-        source_directory = os.path.join(
-            TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
-        )
+
         sample_dest_dir = "some/dummy/path"
 
-        manager = FileManager(source_directory, sample_dest_dir)
-        tree_dict = manager.file_walk(
-            current_dir=None,
-            file_path=os.path.join(
-                TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
-            ),
+        manager = FileManager(
+            source_path=UNCATEGORIZED_DIR_PATH, destination_path=sample_dest_dir
         )
+        tree_dict = manager.file_walk(current_dir=None, file_path=GENERATED_SOURCE_JSON)
 
         assert dicts_are_equal(UNCATEGORIZED_DIR_DICTIONARY, tree_dict) is True
 

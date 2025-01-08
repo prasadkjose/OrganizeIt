@@ -1,10 +1,24 @@
 """ Fixtures """
 
+import os
 from organize_it.settings import FILES, DIR
+from organize_it.settings import (
+    TEST_FIXTURES_DIR,
+)
 
 GENERATED_ROOT_DIR_NAME = "generated_files"
 UNCATEGORIZED_DIR_NAME = "uncategorized_test_directory"
 CATEGORIZED_DIR_NAME = "categorized_test_directory"
+
+GENERATED_SOURCE_JSON = os.path.join(
+    TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
+)
+UNCATEGORIZED_DIR_PATH = os.path.join(
+    TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, UNCATEGORIZED_DIR_NAME
+)
+CATEGORIZED_DIR_PATH = os.path.join(
+    TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
+)
 
 # Example input format
 directory_structure = {

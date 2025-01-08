@@ -40,7 +40,7 @@ class TestInputArgParser:
             "some/source1",
             "some/dest1",
             None,
-            None,
+            False,
         )
 
         parser = InputArgParser()
@@ -48,5 +48,5 @@ class TestInputArgParser:
             None,
             None,
             None,
-            None,
+            False,
         )

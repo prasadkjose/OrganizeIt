@@ -31,7 +31,10 @@ def generate_with_ai(
 
 
 def process_source_and_generate_tree(
-    source_directory: str, destination_directory: str, generated_source_tree_path: str
+    source_directory: str,
+    destination_directory: str,
+    generated_source_tree_path: str,
+    generated_source_json: str = GENERATED_SOURCE_JSON,
 ):
     """
     Processes a source directory path, generates a hierarchical tree structure of files,
@@ -44,6 +47,8 @@ def process_source_and_generate_tree(
         destination_directory (str): The absolute or relative path to the source directory
                                  containing files to be processed.
         generated_source_tree_path (str): The path where the generated file tree structure
+                                      will be saved.
+        generated_source_json (str): The path where the generated file structure dict
                                       will be saved.
 
     Returns:
@@ -77,7 +82,7 @@ def process_source_and_generate_tree(
         get_or_update_current_state(True)
 
         # Read the source directory and create oIt tree input dictionary and save it to a file
-        source_tree_dict = file_manager.file_walk(file_path=GENERATED_SOURCE_JSON)
+        source_tree_dict = file_manager.file_walk(file_path=generated_source_json)
 
         # write the source tree structure result to a file
         FileManager.create_and_write_file(
@@ -88,7 +93,7 @@ def process_source_and_generate_tree(
         )
         return file_manager, tree_structure, source_tree_dict
 
-    with open(os.path.join(GENERATED_SOURCE_JSON), "r", encoding="utf-8") as f:
+    with open(os.path.join(generated_source_json), "r", encoding="utf-8") as f:
         source_tree_dict = json.loads(f.read())
     return file_manager, tree_structure, source_tree_dict
 
