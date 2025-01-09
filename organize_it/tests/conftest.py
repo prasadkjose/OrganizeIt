@@ -15,7 +15,7 @@ from organize_it.tests._fixtures.directory_structure_fixtures import (
 
 
 def pytest_addoption(parser):
-    parser.addoption("--clean", action="store_true", default=False)
+    parser.addoption("--keep", action="store_true", default=False)
     parser.addoption("--ai", action="store_true", default=False)
 
 
@@ -33,7 +33,7 @@ def test_setup(pytestconfig):
 
 
 def cleanup(pytestconfig):
-    should_cleanup = pytestconfig.getoption("clean")
+    should_cleanup = not pytestconfig.getoption("keep")
     generated_path = os.path.join(TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME)
     #  Clean up the generated files.
     if should_cleanup:

@@ -55,9 +55,17 @@ python3 setup.py install
 ## Testing
 
 Testing is done using pytest. You can find the testing configurations and fixtures in conftest.py. 
-#### 1. Run the entire suite. 
+#### 1. Run the entire suite without AI integration. 
 ```bash
 pytest
+```
+#### 2. Run the entire suite with AI integration.
+```bash
+pytest --ai
+```
+#### 3. Run the entire suite and keep the generated test files and configs. 
+```bash
+pytest --keep
 ```
 ## Usage
 

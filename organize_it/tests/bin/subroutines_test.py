@@ -79,7 +79,7 @@ class TestSubroutines:
 
     def test_categorize_and_generate_dest_tree(self, pytestconfig):
         """Sanity test to sort and categorize oIt dict and check the generated tree"""
-        clean = pytestconfig.getoption("clean")
+        clean = not pytestconfig.getoption("keep")
 
         tree_structure = TreeStructure()
         if clean:
