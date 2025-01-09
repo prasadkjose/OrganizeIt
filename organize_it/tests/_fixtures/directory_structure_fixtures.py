@@ -9,6 +9,8 @@ from organize_it.settings import (
 GENERATED_ROOT_DIR_NAME = "generated_files"
 UNCATEGORIZED_DIR_NAME = "uncategorized_test_directory"
 CATEGORIZED_DIR_NAME = "categorized_test_directory"
+CATEGORIZED_TREE_FILE_NAME = "categorized__generated.tree"
+
 
 GENERATED_SOURCE_JSON = os.path.join(
     TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, "tree_walk_test.json"
@@ -18,6 +20,9 @@ UNCATEGORIZED_DIR_PATH = os.path.join(
 )
 CATEGORIZED_DIR_PATH = os.path.join(
     TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_DIR_NAME
+)
+CATEGORIZED_TREE_PATH = os.path.join(
+    TEST_FIXTURES_DIR, GENERATED_ROOT_DIR_NAME, CATEGORIZED_TREE_FILE_NAME
 )
 
 # Example input format

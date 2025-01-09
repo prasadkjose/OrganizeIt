@@ -2,15 +2,26 @@
 
 import pytest
 import os
-from organize_it.bin.subroutines import process_source_and_generate_tree
+from organize_it.bin.subroutines import (
+    process_source_and_generate_tree,
+    categorize_and_generate_dest_tree,
+)
 from organize_it.tests._fixtures.directory_structure_fixtures import (
     UNCATEGORIZED_DIR_PATH,
     CATEGORIZED_DIR_PATH,
     GENERATED_SOURCE_JSON,
     UNCATEGORIZED_DIR_DICTIONARY,
     GENERATED_ROOT_DIR_NAME,
+    CATEGORIZED_TREE_PATH,
+    CATEGORIZED_DIR_DICTIONARY,
 )
-from organize_it.settings import get_or_update_current_state, TEST_FIXTURES_DIR
+from organize_it.settings import (
+    DIR,
+    get_or_update_current_state,
+    TEST_FIXTURES_DIR,
+    TEST_FIXTURES_CONFIGS as CONFIG,
+)
+
 from organize_it.tests.test_utils import dicts_are_equal
 from organize_it.bin.file_manager import FileManager
 from organize_it.bin.tree_structure import TreeStructure
@@ -65,3 +76,22 @@ class TestSubroutines:
             )
         # In a stale run, we try to read from the previously generated configs.
         assert isinstance(exc_info.value, FileNotFoundError) is True
+
+    def test_categorize_and_generate_dest_tree(self, pytestconfig):
+        """Sanity test to sort and categorize oIt dict and check the generated tree"""
+        clean = pytestconfig.getoption("clean")
+
+        tree_structure = TreeStructure()
+        if clean:
+            assert os.path.exists(CATEGORIZED_TREE_PATH) is False
+        categorized_tree_dict = categorize_and_generate_dest_tree(
+            config=CONFIG[1],
+            source_tree_dict=UNCATEGORIZED_DIR_DICTIONARY,
+            tree_structure=tree_structure,
+            dest_tree_path=CATEGORIZED_TREE_PATH,
+        )
+        assert os.path.exists(CATEGORIZED_TREE_PATH) is True
+        assert (
+            dicts_are_equal(CATEGORIZED_DIR_DICTIONARY, categorized_tree_dict[DIR])
+            is True
+        )

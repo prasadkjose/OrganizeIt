@@ -107,7 +107,7 @@ def categorize_and_generate_dest_tree(
     """
     Categorizes files and directories paths from the source tree dictionary based on a
     given configuration, and then generates and writes the categorized tree structure
-    to the destination directory.
+    to the destination directory. No file operation is performed here.
 
     Parameters:
         config (dict): The config dict.
@@ -117,6 +117,7 @@ def categorize_and_generate_dest_tree(
         tree_structure (TreeStructure): An instance of the TreeStructure class used
                                          to generate and write the categorized tree structure
                                          to the destination directory.
+        dest_tree_path (str): Path to the categorized tree path.
 
     Returns:
         dict: A dictionary representing the categorized file tree, where files and
@@ -131,12 +132,14 @@ def categorize_and_generate_dest_tree(
 
     # Categorize the files and dirs based on the given config
     categorizer = Categorizer(config)
-    categorized_tree_dict = categorizer.categorize_dict(source_tree_dict, True)
+    categorized_tree_dict = categorizer.categorize_dict(
+        source_tree_dict=source_tree_dict, recursive=True
+    )
 
     FileManager.create_and_write_file(
         file_path=dest_tree_path,
         callback=lambda file_stream: tree_structure.generate_tree_structure(
-            categorized_tree_dict, "", file_stream
+            tree_dict=categorized_tree_dict, indent="", generated_tree_file=file_stream
         ),
     )
 
