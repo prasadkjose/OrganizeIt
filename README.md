@@ -10,6 +10,7 @@
 - Simple, easy-to-use command-line interface.
 - Supports recursive file handling for organizing files in nested directories.
 - Supports regex-based exclusion of files and directories, ensuring that system or other location-sensitive files remain unaffected.
+- AI integration with OpenAI and Gpt4All(in future updates) to organize your files so you don't have to worry about configs or file formats. 
 
 
 ## Table of Contents
@@ -84,6 +85,7 @@ oIt --src /path/to/your/directory --dest /path/to/your/destination
 - `--src`: The directory whose files you want to organize.
 - `--dest`: The detination directory wwhere the organized files will be moved/copied to.
 - By default, your files will be copied. To move your files into an organized structure, use the `--move` flag. Please note that this operation is permanent and cannot be undone.
+- Run the tool in AI mode with `--ai` flag. 
 
 
 This command will scan the specified source directory, organize the files by their types into appropriate subdirectories (such as `Images`, `Documents`, `Videos`, etc.), and move the files accordingly.
